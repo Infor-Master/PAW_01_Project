@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import VueResource from 'vue-resource'
 import VueGeolocation from 'vue-browser-geolocation'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -12,9 +13,10 @@ import Map from './pages/Map.vue'
 import ListZones from './pages/ListZones.vue'
 
 
+
 Vue.config.productionTip = false
 Vue.use(VueRouter)
-Vue.use(VueResource)
+Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 Vue.use(VueGeolocation)
 Vue.use(VueGoogleMaps,  {

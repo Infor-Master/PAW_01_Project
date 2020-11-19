@@ -47,18 +47,21 @@ func main() {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
-	/* Zonas
-	evaluation := router.Group("/api/v1/evaluation")
-	evaluation.Use(services.AuthorizationRequired())
+	zone := router.Group("/zones")
+	zone.Use(services.AuthorizationRequired())
 	{
-		evaluation.POST("/", routes.AddEvaluation)
-		evaluation.GET("/", routes.GetAllEvaluation)
-		evaluation.GET("/:id", routes.GetEvaluationById)
-		evaluation.PUT("/:id", routes.UpdateEvaluation)
-		evaluation.DELETE("/:id", routes.DeleteEvaluation)
-	} */
+		zone.GET("/", routes.GetZones)
+	}
 
-	auth := router.Group("/api/v1/auth")
+	admin := router.Group("/admin")
+	admin.Use(services.AuthorizationRequired())
+	{
+		admin.GET("/zones", routes.GetZones)
+		admin.POST("/zones", routes.AddZone)
+		admin.DELETE("/zones/:id", routes.DeleteZone)
+	}
+
+	auth := router.Group("/")
 	{
 		auth.POST("/login", routes.GenerateToken)
 		auth.POST("/register", routes.RegisterUser)

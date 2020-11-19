@@ -9,4 +9,5 @@ type Zone struct {
 	Latitude   float32
 	Longitude  float32
 	Limit      int
+	PplCount   int
 }

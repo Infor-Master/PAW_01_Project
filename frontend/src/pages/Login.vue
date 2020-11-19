@@ -27,10 +27,12 @@ export default {
   },
  methods: {
     handlerSubmit: function(){
-      this.$http.post('http://localhost:8081/login', {  //não aceita endereço docker pois é no browser. Como porta é diferente origina problema de cors
+      this.axios.post('http://localhost:8081/login', {  //não aceita endereço docker pois é no browser. Como porta é diferente origina problema de cors
           username: this.username,
           password: this.password
         }).then(response => {
+          console.log(response);
+          /* 
           let is_admin = response.data.user.is_admin
           localStorage.setItem('user',JSON.stringify(response.data.user))
           localStorage.setItem('jwt',response.data.token)
@@ -41,7 +43,8 @@ export default {
             }else {
               this.$router.push('map')
             }
-          }
+          } 
+          */
         }).catch(function (error) {
           console.error(error.response);
         });
