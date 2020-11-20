@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary Realizar registro
+/* // @Summary Realizar registro
 // @Description Regista um utilizador
 // @Accept  json
 // @Produce  json
@@ -17,7 +17,7 @@ import (
 // @Failure 401 "Unauthorized"
 func RegisterUser(c *gin.Context) {
 	controllers.RegisterHandler(c)
-}
+} */
 
 // @Summary Realizar autenticação
 // @Description Autentica o utilizador e gera o token para os próximos acessos

@@ -32,6 +32,7 @@ func main() {
 	corsConfig.AllowOrigins = []string{"*"}
 	// To be able to send tokens to the server.
 	corsConfig.AllowCredentials = true
+	corsConfig.AllowHeaders = []string{"content-type", "authorization"}
 	// OPTIONS method for ReactJS
 	corsConfig.AddAllowMethods("OPTIONS")
 
@@ -59,12 +60,12 @@ func main() {
 		admin.GET("/zones", routes.GetZones)
 		admin.POST("/zones", routes.AddZone)
 		admin.DELETE("/zones/:id", routes.DeleteZone)
+		admin.POST("/users", routes.Register)
 	}
 
 	auth := router.Group("/")
 	{
 		auth.POST("/login", routes.GenerateToken)
-		auth.POST("/register", routes.RegisterUser)
 		auth.PUT("/refresh_token", services.AuthorizationRequired(), routes.RefreshToken)
 	}
 

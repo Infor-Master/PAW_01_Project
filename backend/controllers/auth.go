@@ -23,7 +23,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	token := services.GenerateTokenJWT(creds)
+	token := services.GenerateTokenJWT(usr)
 
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "Access denied!"})
@@ -33,7 +33,7 @@ func LoginHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success!", "token": token})
 }
 
-func RegisterHandler(c *gin.Context) {
+/* func RegisterHandler(c *gin.Context) {
 	var creds model.Worker
 
 	if err := c.ShouldBindJSON(&creds); err != nil {
@@ -45,7 +45,7 @@ func RegisterHandler(c *gin.Context) {
 
 	defer services.Db.Close()
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success!", "User ID": creds.ID})
-}
+} */
 
 func RefreshHandler(c *gin.Context) {
 
