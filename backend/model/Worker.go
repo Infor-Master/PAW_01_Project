@@ -8,5 +8,5 @@ type Worker struct {
 	Username   string "gorm:unique"
 	Password   string
 	Name       string "gorm:unique"
-	Admin      bool
+	Admin      bool "gorm:\"defult=false\""
 }

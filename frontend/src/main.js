@@ -11,6 +11,7 @@ import App from './App.vue'
 import Login from './pages/Login.vue'
 import Map from './pages/Map.vue'
 import ListZones from './pages/ListZones.vue'
+import Register from './pages/Register.vue'
 
 
 
@@ -43,6 +44,11 @@ const router = new VueRouter({
       path: '/zones',
       name: 'zones',
       component: ListZones
+    },
+    {
+      path: '/admin/users',
+      name: 'register',
+      component: Register
     }
   ]
 })
