@@ -21,8 +21,8 @@
 import settings from '../settings'
 
 export default {
-  name: 'Login',
-  data(){
+  name: "Login",
+  data() {
     return {
       username: this.username,
       password: this.password,
@@ -43,6 +43,9 @@ export default {
       }).then(response => {
           console.log(response)
           localStorage.setItem('jwt',response.data.token)
+          
+          //descompactar jwt e fazer if para zones ou admin
+          
           this.$router.push('zones')
 
           /*
@@ -63,7 +66,7 @@ export default {
             this.message = error.response.status + " - " + error.response.statusText;
           }
         });
-    }
-  }
-}
+    },
+  },
+};
 </script>
