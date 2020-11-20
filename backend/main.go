@@ -52,6 +52,7 @@ func main() {
 	zone.Use(services.AuthorizationRequired())
 	{
 		zone.GET("/", routes.GetZones)
+		zone.GET("/:id", routes.GetZone)
 	}
 
 	admin := router.Group("/admin")

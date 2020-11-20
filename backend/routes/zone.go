@@ -49,3 +49,9 @@ func AddZone(c *gin.Context) {
 func DeleteZone(c *gin.Context) {
 	controllers.DeleteZone(c)
 }
+
+
+
+func GetZone(c *gin.Context) {
+	controllers.GetZone(c)
+}

@@ -21,6 +21,20 @@ func GetZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
 }
 
+func GetZone(c *gin.Context) {
+	var zone model.Zone := null
+
+	id := c.Param("id")
+	services.Db.Where("id = ?", id).First(&zone)
+
+	if zone == null {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+}
+
 func AddZone(c *gin.Context) {
 	var zone model.Zone
 
