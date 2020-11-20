@@ -12,8 +12,6 @@ import Login from './pages/Login.vue'
 import Map from './pages/Map.vue'
 import ListZones from './pages/ListZones.vue'
 
-
-
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)

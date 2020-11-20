@@ -1,42 +1,53 @@
 <template>
  <div>
-   <form class="login">
+   <form 
+    class="login"
+    @submit.prevent="handlerSubmit"
+   >
      <h1>Sign in</h1>
      <label>User name</label>
      <input required v-model="username" type="text" placeholder="Username"/>
-     <h1>{{username}}</h1>
      <hr/>
      <label>Password</label>
      <input required v-model="password" type="password" placeholder="Password"/>
-     <h1>{{password}}</h1>
      <hr/>
-     <button v-on:click.prevent="handlerSubmit">Login</button>
+     <button type="submit">Login</button>
+     <p>{{message}}</p>
    </form>
  </div>
 </template>
 
 <script>
+import settings from '../settings'
 
 export default {
   name: 'Login',
   data(){
     return {
       username: this.username,
-      password: this.password
+      password: this.password,
+      message: this.message,
     };
   },
  methods: {
-    handlerSubmit: function(){
-      this.axios.post('http://localhost:8081/login', {  //não aceita endereço docker pois é no browser. Como porta é diferente origina problema de cors
+    handlerSubmit(){
+      this.message = "";
+      this.axios({
+        method: 'post',
+        url: '/login',
+        baseURL: settings.baseURL,
+        data: {
           username: this.username,
-          password: this.password
-        }).then(response => {
-          console.log(response);
-          /* 
+          password: this.password,
+        }
+      }).then(response => {
+          console.log(response)
+          localStorage.setItem('jwt',response.data.token)
+          this.$router.push('zones')
+
+          /*
           let is_admin = response.data.user.is_admin
           localStorage.setItem('user',JSON.stringify(response.data.user))
-          localStorage.setItem('jwt',response.data.token)
-
           if (localStorage.getItem('jwt') != null){
             if(is_admin== 1){
               this.$router.push('admin')
@@ -45,8 +56,12 @@ export default {
             }
           } 
           */
-        }).catch(function (error) {
-          console.error(error.response);
+        }).catch(error => {
+          // para ter acesso ao this.message, o catch tem de usar função via seta "=>"
+          if(error.response){
+            console.error(error.response);
+            this.message = error.response.status + " - " + error.response.statusText;
+          }
         });
     }
   }
