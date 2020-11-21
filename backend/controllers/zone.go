@@ -6,6 +6,8 @@ import (
 	"projetoapi/services"
 
 	"github.com/gin-gonic/gin"
+
+	"fmt"
 )
 
 func GetZones(c *gin.Context) {
@@ -22,17 +24,31 @@ func GetZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
-	var zone model.Zone := null
+	var zone model.Zone;
+
+	fmt.Print(zone);
 
 	id := c.Param("id")
+
 	services.Db.Where("id = ?", id).First(&zone)
 
-	if zone == null {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-		return
-	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	fmt.Print(zone)
+
+	//if zone != nil {
+	//	fmt.Print(zone)
+	//	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	//} else {
+	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+	//	return
+	//}
+
+
+	//if zone == nil {
+	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+	//	return
+	//}
 }
 
 func AddZone(c *gin.Context) {
