@@ -14,33 +14,48 @@
             Zones
           </b>
         </h3>
+        <p>{{message}}</p>
         <hr class="my-2" />
         <b-list-group>
-        <b-list-group-item>
-          <h5>Zone A</h5>
+        <b-list-group-item v-for="(zone,index) in zones[0]"
+        :key="index">
+          {{zone.Name}}
           <b-progress :value="value+5" show-value :max="max" class="mb-3"></b-progress>
         </b-list-group-item>
-        <b-list-group-item>
-          <h5>Zone B</h5>
-          <b-progress :value="value+20" show-value :max="max" class="mb-3"></b-progress>
-        </b-list-group-item>
-        <b-list-group-item>
-          <h5>Zone C</h5>
-          <b-progress :value="value+8" show-value :max="max" class="mb-3"></b-progress>
-        </b-list-group-item>
       </b-list-group>
+        
       </template>
     </b-jumbotron>
   </div>
 </template>
 
 <script>
+//import settings from '../settings'
+
 export default {
   data(){
     return{
+      zones: [],
       value: 33.333,
-      max:100
+      max:100,
+      message: this.message,
     }
+  },
+  mounted: function() {
+      this.message = "";
+      this.axios.get('http://localhost:8081/zones/')
+        .then((response) =>{
+          for(var i in response.data){
+            this.zones.push(response.data[i])
+           }
+        })
+        .catch(error => {
+          // para ter acesso ao this.message, o catch tem de usar função via seta "=>"
+          if(error.response){
+            console.error(error.response);
+            this.message = error.response.status + " - " + error.response.statusText;
+          }
+        });
   }
 }
 </script>
