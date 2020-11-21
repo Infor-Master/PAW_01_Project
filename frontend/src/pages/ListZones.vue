@@ -2,7 +2,7 @@
   <div class="myDiv">
     <br>
     <div class="myBtn">
-      <b-button variant="success">
+      <b-button variant="success" @click.prevent="logout">
         Logout
       </b-button>
     </div>
@@ -35,13 +35,22 @@
 </template>
 
 <script>
+import settings from '../settings'
+
 export default {
   data(){
     return{
       value: 33.333,
       max:100
     }
-  }
+  },
+  methods: {
+    logout(){
+      localStorage.removeItem('jwt')
+      this.$router.push('login')
+    },
+  },
+
 }
 </script>
 
