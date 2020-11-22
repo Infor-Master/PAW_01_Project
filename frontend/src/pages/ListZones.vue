@@ -44,7 +44,7 @@ export default {
   methods: {
     logout(){
       localStorage.removeItem('jwt')
-      this.$router.push('login')
+      this.$router.push({name: 'login'})
     },
   },
   mounted() {
@@ -52,7 +52,10 @@ export default {
       this.axios({
         method: 'get',
         url: '/zones',
-        baseURL: settings.baseURL
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
       }).then((response) =>{
           for(var i in response.data){
             this.zones.push(response.data[i])

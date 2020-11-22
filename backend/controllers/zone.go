@@ -12,7 +12,7 @@ import (
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-
+	
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -55,7 +55,7 @@ func AddZone(c *gin.Context) {
 		return
 	}
 	services.Db.Save(&zone)
-	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": zone.ID})
+	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": zone.Name})
 }
 
 func DeleteZone(c *gin.Context) {
