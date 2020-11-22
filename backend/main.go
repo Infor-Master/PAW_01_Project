@@ -5,7 +5,6 @@ import (
 	"projetoapi/routes"
 	"projetoapi/services"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	swaggerFiles "github.com/swaggo/files"
@@ -27,18 +26,9 @@ func main() {
 
 	services.FormatSwagger()
 
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"*"}
-	// To be able to send tokens to the server.
-	corsConfig.AllowCredentials = true
-	corsConfig.AllowHeaders = []string{"content-type", "authorization"}
-	// OPTIONS method for ReactJS
-	corsConfig.AddAllowMethods("OPTIONS")
-
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	router := gin.New()
-	router.Use(cors.New(corsConfig))
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
