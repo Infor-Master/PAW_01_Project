@@ -1,3 +1,3 @@
 export default Object.freeze({
-    baseURL: "http://localhost:8081",
+    baseURL: "http://localhost:5000/api",
 })

@@ -4,15 +4,15 @@ import (
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
-	"fmt"
 )
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-
+	
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -41,29 +41,26 @@ func GetZonesOfWorker(c *gin.Context) {
 }*/
 
 func GetZone(c *gin.Context) {
-	var zone model.Zone
+	
+	var zone model.Zone;
 
-	fmt.Print(zone)
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
-	id := c.Param("id")
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+		return
+	}
 
-	services.Db.Where("id = ?", id).First(&zone)
+	uintID := uint(id)
+
+	services.Db.Where("id = ?", uintID).First(&zone)
+
+	if zone.ID != uintID {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-	fmt.Print(zone)
-
-	//if zone != nil {
-	//	fmt.Print(zone)
-	//	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-	//} else {
-	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-	//	return
-	//}
-
-	//if zone == nil {
-	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-	//	return
-	//}
 }
 
 func AddZone(c *gin.Context) {
@@ -74,7 +71,7 @@ func AddZone(c *gin.Context) {
 		return
 	}
 	services.Db.Save(&zone)
-	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": zone.ID})
+	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": zone.Name})
 }
 
 func DeleteZone(c *gin.Context) {

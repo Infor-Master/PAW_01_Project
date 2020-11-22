@@ -6,6 +6,7 @@ type Worker struct {
 	gorm.Model `swaggerignore:"true"`
 	Username   string "gorm:unique"
 	Password   string
-	Name       string
-	Admin      bool `gorm:"default=false"`
+	Name       string 
+	Admin      bool   `gorm:"default=false"`
+	ZoneID int `gorm:"foreignKey:id;references:Zone"`
 }
