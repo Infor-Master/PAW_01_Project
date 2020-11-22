@@ -12,6 +12,7 @@ import Login from './pages/Login.vue'
 import Map from './pages/Map.vue'
 import ListZones from './pages/ListZones.vue'
 import Register from './pages/Register.vue'
+import LocalControl from './pages/LocalControl.vue'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -47,6 +48,11 @@ const router = new VueRouter({
       path: '/admin/users',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/zones/:id',
+      name: 'localControl',
+      component: LocalControl
     }
   ]
 })

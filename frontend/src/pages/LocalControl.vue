@@ -3,8 +3,10 @@
       <b-container>
         <b-row >
           <b-col>
-            <b-jumbotron header="Local" lead="Person">
-              <h1>Number of people: </h1>
+            <!--<b-jumbotron header="Local" lead="Person">-->
+            <b-jumbotron lead="Person">
+              <template #header>{{local.name}}</template>
+              <h1>{{local}} Number of people: </h1>
               <b-button class="button" size=lg variant="success">Add Person</b-button>
               <p></p>
               <b-button class="button" size=lg variant="danger">Remove Person</b-button>
@@ -39,6 +41,7 @@
 <script>
 
 import VueTable from '@/components/VueTable'
+import settings from '@/settings'
 
 export default {
   props:{
@@ -46,8 +49,26 @@ export default {
   },
   data(){
     return{
-      zone: zone
+      zone: []
     }
+  },
+  mounted() {
+      this.axios({
+        method: 'get',
+        url: '/zones/1',
+        baseURL: settings.baseURL
+      }).then((response) =>{
+          for(var i in response.data){
+            this.zones.push(response.data[i])
+           }
+           console.log(this.zones)
+        })
+        .catch(error => {
+          if(error.response){
+            console.error(error.response);
+            this.message = error.response.status + " - " + error.response.statusText;
+          }
+        });
   }
 }
 
