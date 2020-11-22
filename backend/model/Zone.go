@@ -7,6 +7,6 @@ type Zone struct {
 	Name       string "gorm:unique"
 	Latitude   float32
 	Longitude  float32
-	Limit      int "gorm:not null"
-	PplCount   int
+	Limits      int "gorm:not null"
+	PplCount   int `gorm:"default=0"`
 }

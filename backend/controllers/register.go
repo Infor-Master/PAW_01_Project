@@ -10,11 +10,13 @@ import (
 
 func Register(c *gin.Context) {
 	var worker model.Worker
-
+	
 	if err := c.ShouldBindJSON(&worker); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check syntax!"})
 		return
 	}
+	services.OpenDatabase()
 	services.Db.Save(&worker)
+	defer services.Db.Close()
 	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": worker.Name})
 }

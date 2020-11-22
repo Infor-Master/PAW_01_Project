@@ -48,14 +48,14 @@ func main() {
 	})
 
 	zone := router.Group("/zones")
-	zone.Use(services.AuthorizationRequired())
+	//zone.Use(services.AuthorizationRequired())
 	{
 		zone.GET("/", routes.GetZones)
 		zone.GET("/:id", routes.GetZone)
 	}
 
 	admin := router.Group("/admin")
-	admin.Use(services.AuthorizationRequired())
+	//admin.Use(services.AuthorizationRequired())
 	{
 		admin.GET("/zones", routes.GetZones)
 		admin.POST("/zones", routes.AddZone)

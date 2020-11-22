@@ -12,7 +12,7 @@ import (
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-
+	
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -25,9 +25,7 @@ func GetZones(c *gin.Context) {
 
 func GetZone(c *gin.Context) {
 	var zone model.Zone;
-
-	fmt.Print(zone);
-
+	
 	id := c.Param("id")
 
 	services.Db.Where("id = ?", id).First(&zone)
@@ -35,20 +33,6 @@ func GetZone(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
 	fmt.Print(zone)
-
-	//if zone != nil {
-	//	fmt.Print(zone)
-	//	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-	//} else {
-	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-	//	return
-	//}
-
-
-	//if zone == nil {
-	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-	//	return
-	//}
 }
 
 func AddZone(c *gin.Context) {
@@ -58,8 +42,10 @@ func AddZone(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check syntax!"})
 		return
 	}
+	services.OpenDatabase()
 	services.Db.Save(&zone)
-	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": zone.ID})
+	defer services.Db.Close()
+	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Create successful!", "resourceId": zone.Name})
 }
 
 func DeleteZone(c *gin.Context) {
