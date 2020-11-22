@@ -48,11 +48,13 @@ func main() {
 	})
 
 	zone := router.Group("/zones")
-	zone.Use(services.AuthorizationRequired())
+	services.OpenDatabase()
+	zone.GET("/", routes.GetZones)
+	/*zone.Use(services.AuthorizationRequired())
 	{
 		zone.GET("/", routes.GetZones)
 		zone.GET("/:id", routes.GetZone)
-	}
+	}*/
 
 	admin := router.Group("/admin")
 	admin.Use(services.AuthorizationRequired())

@@ -23,15 +23,31 @@ func GetZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
 }
 
-func GetZone(c *gin.Context) {
-	var zone model.Zone;
+/*
+func GetZonesOfWorker(c *gin.Context) {
+	var wzones []model.WorkersZone
+	var worker []model.Worker
+	var zones []model.Zone
 
-	fmt.Print(zone);
+	//services.Db.Where("IdWorker = ?",1).Find(&zones)
+	//services.Db.Where("").Find()
+
+	if len(zones) <= 0 {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find any zone!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": wzones})
+}*/
+
+func GetZone(c *gin.Context) {
+	var zone model.Zone
+
+	fmt.Print(zone)
 
 	id := c.Param("id")
 
 	services.Db.Where("id = ?", id).First(&zone)
-
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
 	fmt.Print(zone)
@@ -43,7 +59,6 @@ func GetZone(c *gin.Context) {
 	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
 	//	return
 	//}
-
 
 	//if zone == nil {
 	//	c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})

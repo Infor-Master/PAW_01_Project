@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import settings from '../settings'
+//import settings from '../settings'
 
 export default {
   data(){
@@ -45,15 +45,20 @@ export default {
     logout(){
       localStorage.removeItem('jwt')
       this.$router.push('login')
-    },
+    }
   },
   mounted() {
       this.message = "";
-      this.axios({
+      /*this.axios({
         method: 'get',
         url: '/zones',
-        baseURL: settings.baseURL
-      }).then((response) =>{
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+      })*/
+      this.axios.get('http://localhost:8081/zones/')
+        .then((response) =>{
           for(var i in response.data){
             this.zones.push(response.data[i])
            }
