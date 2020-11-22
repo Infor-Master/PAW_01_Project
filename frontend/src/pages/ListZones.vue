@@ -52,7 +52,10 @@ export default {
       this.axios({
         method: 'get',
         url: '/zones',
-        baseURL: settings.baseURL
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
       }).then((response) =>{
           for(var i in response.data){
             this.zones.push(response.data[i])

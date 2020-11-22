@@ -47,14 +47,14 @@ func main() {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
-	zone := router.Group("/zones")
+	zone := router.Group("/api/zones")
 	zone.Use(services.AuthorizationRequired())
 	{
 		zone.GET("/", routes.GetZones)
 		zone.GET("/:id", routes.GetZone)
 	}
 
-	admin := router.Group("/admin")
+	admin := router.Group("/api/admin")
 	admin.Use(services.AuthorizationRequired())
 	{
 		admin.GET("/zones", routes.GetZones)
@@ -63,12 +63,12 @@ func main() {
 		admin.POST("/users", routes.Register)
 	}
 
-	auth := router.Group("/")
+	auth := router.Group("/api/")
 	{
 		auth.POST("/login", routes.GenerateToken)
 		auth.PUT("/refresh_token", services.AuthorizationRequired(), routes.RefreshToken)
 	}
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8081")
 }
