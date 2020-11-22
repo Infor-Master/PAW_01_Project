@@ -8,4 +8,5 @@ type Worker struct {
 	Password   string
 	Name       string 
 	Admin      bool   `gorm:"default=false"`
+	ZoneID int `gorm:"foreignKey:id;references:Zone"`
 }

@@ -5,12 +5,12 @@
           <b-col>
             <!--<b-jumbotron header="Local" lead="Person">-->
             <b-jumbotron lead="Person">
-              <template #header>{{local.name}}</template>
-              <h1>{{local}} Number of people: </h1>
+              <template #header>{{zone.Name}}</template>
+              <h1> Number of people: {{zone.PplCount}} </h1>
               <b-button class="button" size=lg variant="success">Add Person</b-button>
               <p></p>
               <b-button class="button" size=lg variant="danger">Remove Person</b-button>
-              <VueTable />
+              <!--<VueTable />-->
             </b-jumbotron>
           </b-col>
         </b-row>
@@ -42,6 +42,7 @@
 
 import VueTable from '@/components/VueTable'
 import settings from '@/settings'
+import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   props:{
@@ -49,26 +50,26 @@ export default {
   },
   data(){
     return{
-      zone: []
+      zone: {},
+      jwt: {}
     }
   },
   mounted() {
-      this.axios({
-        method: 'get',
-        url: '/zones/1',
-        baseURL: settings.baseURL
-      }).then((response) =>{
-          for(var i in response.data){
-            this.zones.push(response.data[i])
-           }
-           console.log(this.zones)
-        })
-        .catch(error => {
-          if(error.response){
-            console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
-          }
-        });
+    this.axios({
+      method: 'get',
+      url: `/zones/${this.$route.params.id}`,
+      baseURL: settings.baseURL,
+      headers:{
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      }
+    }).then((response) =>{
+        this.zone = response.data.data
+    }).catch(error => {
+        if(error.response){
+          console.error(error.response);
+          this.message = error.response.status + " - " + error.response.statusText;
+        }
+      });
   }
 }
 

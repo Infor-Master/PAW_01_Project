@@ -10,5 +10,6 @@ type Claims struct {
 	Username           string `json:"username"`
 	Name               string `json:"name"`
 	Admin              bool   `json:"admin"`
+	Id uint `json:"id"`
 	jwt.StandardClaims `swaggerignore:"true"`
 }
