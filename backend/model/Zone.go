@@ -9,5 +9,5 @@ type Zone struct {
 	Longitude  float32
 	Limits      int "gorm:not null"
 	PplCount   int `gorm:"default=0"`
-	Workers []int `gorm:"foreignKey:id;references:Worker"`
+	Workers []Worker `gorm:"foreignKey:ZoneID"`
 }

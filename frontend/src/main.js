@@ -14,6 +14,7 @@ import ListZones from './pages/ListZones.vue'
 import Register from './pages/Register.vue'
 import LocalControl from './pages/LocalControl.vue'
 import AddRemoveZone from './pages/AddRemoveZone.vue'
+import VueJwtDecode from 'vue-jwt-decode'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -27,6 +28,7 @@ Vue.use(VueGoogleMaps,  {
   },
   installComponents: true,
 })
+Vue.use(VueJwtDecode)
 
 const router = new VueRouter({
   routes: [

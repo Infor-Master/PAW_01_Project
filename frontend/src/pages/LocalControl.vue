@@ -4,8 +4,9 @@
         <b-row >
           <b-col>
             <!--<b-jumbotron header="Local" lead="Person">-->
-            <b-jumbotron lead="Person">
+            <b-jumbotron>
               <template #header>{{zone.Name}}</template>
+              <template #lead>{{jwtDecoded}}</template>
               <h1> Number of people: {{zone.PplCount}} </h1>
               <b-button class="button" size=lg variant="success">Add Person</b-button>
               <p></p>
@@ -15,25 +16,7 @@
           </b-col>
         </b-row>
       </b-container>
-
-
-
-      <b-jumbotron header="Local" lead="Person">
-        <h1>Number of people: </h1>
-        <b-container class="bv-example-row">
-          <b-row>
-            <b-col>
-              <b-button class="button" size=lg variant="success">Add Person</b-button>
-           </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-button class="button" size=lg variant="danger">Remove Person</b-button>
-            </b-col>
-          </b-row>
-        </b-container>
-      </b-jumbotron>
-</div>
+  </div>
 </template>
 
 
@@ -42,7 +25,7 @@
 
 import VueTable from '@/components/VueTable'
 import settings from '@/settings'
-import VueJwtDecode from 'vue-jwt-decode'
+//import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   props:{
@@ -51,10 +34,16 @@ export default {
   data(){
     return{
       zone: {},
-      jwt: {}
+      jwtDecoded: {}
     }
   },
   mounted() {
+    try{
+      jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+    }catch(e){
+      console.error(e)
+    }
+    console.log(jwtDecoded)
     this.axios({
       method: 'get',
       url: `/zones/${this.$route.params.id}`,
