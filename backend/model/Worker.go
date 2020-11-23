@@ -8,5 +8,6 @@ type Worker struct {
 	Password   string
 	Name       string 
 	Admin      bool   `gorm:"default=false"`
-	ZoneID uint
+	Zones []*Zone `gorm:"many2many:worker_zone;"`
+	//ZoneID uint
 }
