@@ -8,10 +8,10 @@
      <input required v-model="name" type="text" placeholder="Name"/>
      <p/>
      <label>Latitude</label>
-     <input required v-model="latitude" type="number" step="0.00000001" placeholder="Latitude"/>
+     <input required v-model="latitude" type="number" step="0.00000000000000001" placeholder="Latitude"/>
      <p/>
      <label>Longitude</label>
-     <input required v-model="longitude" type="number" step="0.00000001" placeholder="Longitude"/>
+     <input required v-model="longitude" type="number" step="0.00000000000000001" placeholder="Longitude"/>
      <p/>
      <label>Limit</label>
      <input required v-model="limits" type="number" placeholder="Limit"/>
@@ -21,9 +21,11 @@
    </form>
 
    <form 
-    class="RemoveZone"
-    @submit.prevent="handlerSubmitRemove">
-     <button type="submit">Remove</button>
+    class="RemoveZone" @submit.prevent="handlerSubmitRemove()">
+
+    <b-form-select v-model="selected" :plain="true" :options="this.zonesOptions" />
+
+    <button type="submit">Remove</button>
    </form>
  </div>
 </template>
@@ -35,7 +37,9 @@ export default {
   name: 'addRemoveZone',
   data(){
     return {
-      zones: [],
+      selected: '',
+      zonesOptions: [],
+      aux:[],
       message: this.message,
       name: this.name,
       latitude: this.latitude,
@@ -68,14 +72,30 @@ export default {
             this.message = error.response.status + " - " + error.response.statusText;
           }
         });
-    },/*handlerSubmitRemove(){
-         this.message = "";
+    },handlerSubmitRemove(){
+
+      var temp = 0;
+    
+      for(var j = 0; j < this.aux.length; j++){
+        const aux = this.aux[j]["Name"];
+        
+        const aux2 = this.selected;
+
+        if(aux===aux2){
+          temp=j+1;
+        }
+       
+        console.log(temp);
+
+      }
+
+        this.message = "";
         this.axios({
         method: 'delete',
         url: '/admin/zones',
         baseURL: settings.baseURL,
         data: {
-          id: this.id,
+          id: temp,
         },
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -90,17 +110,27 @@ export default {
           }
         });
     },
-    mounted() {
+  },
+  mounted() {
       this.message = "";
       this.axios({
         method: 'get',
         url: '/zones',
-        baseURL: settings.baseURL
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
       }).then((response) =>{
-          for(var i in response.data){
-            this.zones.push(response.data[i])
-           }
-           localStorage.setItem("zones",this.zones);
+
+        this.aux=response.data["data"];
+
+            for(var j = 0; j < this.aux.length; j++){
+            var option = []
+            option["name"] = this.aux[j]["Name"]
+
+             this.zonesOptions.push(option['name'])
+
+          }
         })
         .catch(error => {
           if(error.response){
@@ -108,7 +138,6 @@ export default {
             this.message = error.response.status + " - " + error.response.statusText;
           }
         });
-    }*/
   }
 }
 </script>

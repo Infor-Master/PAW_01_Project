@@ -50,9 +50,10 @@ func DeleteZone(c *gin.Context) {
 	var zone model.Zone
 
 	id := c.Param("id")
+	fmt.Print(id)
 	services.Db.First(&zone, id)
 
-	if zone.ID == 0 {
+	if zone.ID == 0  {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
 		return
 	}
