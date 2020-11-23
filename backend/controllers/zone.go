@@ -94,8 +94,10 @@ func AddPerson(c *gin.Context) {
 		return
 	}
 
-	
+	zone.PplCount++
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	services.Db.Save(&zone)
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": ""})
 
 }

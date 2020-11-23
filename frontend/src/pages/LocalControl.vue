@@ -70,10 +70,8 @@ export default {
         },
         data: {
             zoneId : this.$route.params.id,
-            workerId: VueJwtDecode.decode(localStorage.getItem('jwt')).id
+            //workerId: VueJwtDecode.decode(localStorage.getItem('jwt')).id
         }
-      }).then((response) =>{
-          this.zone = response.data.data
       }).catch(error => {
           if(error.response){
             console.error(error.response);
