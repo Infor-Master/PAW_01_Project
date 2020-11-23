@@ -1,9 +1,13 @@
 <template>
  <div>
      <h1>Manage Zones</h1>
+     <p>
+    <button v-on:click="handlerOnclickBack">Back</button>
+    <p>
    <form 
     class="addZone"
     @submit.prevent="handlerSubmitAdd">
+    
      <label>Name</label>
      <input required v-model="name" type="text" placeholder="Name"/>
      <p/>
@@ -48,6 +52,9 @@ export default {
     };
   },
  methods: {
+   handlerOnclickBack(){
+     this.$router.go(-1)
+   },
     handlerSubmitAdd(){
       this.message = "";
       this.axios({

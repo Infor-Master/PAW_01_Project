@@ -1,5 +1,8 @@
 <template>
  <div>
+   <p>
+    <button v-on:click="handlerOnclickBack">Back</button>
+    <p>
    <form 
     class="register"
     @submit.prevent="handlerSubmit">
@@ -45,6 +48,9 @@ export default {
     };
   },
  methods: {
+   handlerOnclickBack(){
+     this.$router.go(-1)
+   },
     handlerSubmit(){
       this.message = "";
       this.axios({
@@ -74,7 +80,6 @@ export default {
     
       for(var j = 0; j < this.aux.length; j++){
         const aux = this.aux[j]["Username"];
-        console.log("-----------------1-------------------"+this.aux[j]["Username"]);
         
         const aux2 = this.selected;
 

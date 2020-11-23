@@ -13,12 +13,14 @@ import Map from './pages/Map.vue'
 import ListZones from './pages/ListZones.vue'
 import Register from './pages/Register.vue'
 import AddRemoveZone from './pages/AddRemoveZone.vue'
+import AdminPage from './pages/AdminPage.vue'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 Vue.use(VueGeolocation)
+
 Vue.use(VueGoogleMaps,  {
   load: {
     key: 'AIzaSyDvzBG1YC-EqqOau_4BMMAgK7p-t9nrYjE',
@@ -53,6 +55,11 @@ const router = new VueRouter({
       path: '/admin/zones',
       name: 'adminZones',
       component: AddRemoveZone
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminPage 
     }
   ]
 })
