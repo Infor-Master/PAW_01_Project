@@ -4,15 +4,14 @@ import (
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"fmt"
 )
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-	
+
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -24,15 +23,26 @@ func GetZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
-	var zone model.Zone;
-	
-	id := c.Param("id")
 
-	services.Db.Where("id = ?", id).First(&zone)
+	var zone model.Zone
 
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+		return
+	}
+
+	uintID := uint(id)
+
+	services.Db.Where("id = ?", uintID).First(&zone)
+
+	if zone.ID != uintID {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-	fmt.Print(zone)
 }
 
 func AddZone(c *gin.Context) {
@@ -60,4 +70,31 @@ func DeleteZone(c *gin.Context) {
 
 	services.Db.Delete(&zone)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
+}
+
+// nao esta feita ainda
+func AddPerson(c *gin.Context) {
+	
+	var zone model.Zone;
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+		return
+	}
+
+	uintID := uint(id)
+
+	services.Db.Where("id = ?", uintID).First(&zone)
+
+	if zone.ID != uintID {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+		return
+	}
+
+	
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+
 }

@@ -32,6 +32,7 @@ func GenerateTokenJWT(credentials model.Worker) string {
 		Username: credentials.Username,
 		Name:     credentials.Name,
 		Admin:    credentials.Admin,
+		Id: credentials.ID,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),

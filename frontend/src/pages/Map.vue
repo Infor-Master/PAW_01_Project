@@ -1,60 +1,124 @@
 <template>
  <div>
    <h1>Coords:</h1>
-   <p>{{ coordinates.lat }} Latitude, {{ coordinates.lng }} Longitude</p>
+   <p>Localização atual: {{ coordinates.lat }} Latitude, {{ coordinates.lng }} Longitude</p>
+   <p>Localização mapa: {{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }} Longitude</p>
    <gmap-map 
         :center="{lat:coordinates.lat, lng:coordinates.lng}"
         :zoom="7"
-        style="width:640px; height:360px; margin: 32px auto;"
+        style="width:1280px; height:720px; margin: 32px auto;"
         ref="mapRef"
     >
         <gmap-info-window
-            :options="{
-                pixelOffset: {
-                    width: 0,
-                    height: -35
-                }
-            }"
-            :position="{lat:coordinates.lat, lng:coordinates.lng}"
+            :options="infoWindowOptions"
+            :position="infoWindowPosition()"
             :opened="infoWindowOpened"
-            @closeclick="infoWindowOpened = false"
+            @closeclick="handleInfoWindowClose()"
         >
             <div>
-                <h2>Evento de Teste</h2>
-                <h5>Participantes: TO-DO</h5>
+                <h2>{{ activeZone.Name }}</h2>
+                <h5>Participantes: {{ activeZone.PplCount }}/{{ activeZone.Limits }} </h5>
             </div>
         </gmap-info-window>
         <gmap-marker
-            :position="{lat:coordinates.lat, lng:coordinates.lng}"
+            v-for="(zone) in zones"
+            :key="zone.ID"
+            :position="getPosition(zone)"
             :clickable="true"
             :draggable="false"
-            @click="infoWindowOpened = true"
+            @click="handleMarkerClicked(zone)"
         >
         </gmap-marker>
-    </gmap-map>
+   </gmap-map>
  </div>
 </template>
 
 <script>
+import settings from '../settings'
 
 export default {
   data() {
     return {
-      infoWindowOpened: false,
-      coordinates: {
-          lat: 0,
-          lng: 0
-      }
+        map : null,
+        zones: [],
+        activeZone: {},
+        infoWindowOptions: {
+            pixelOffset: {
+                width: 0,
+                height: -35
+            }
+        },
+        infoWindowOpened: false,
+        coordinates: {
+            lat: 0,
+            lng: 0
+        }
     };
   },
   created() {
       // get current coords from browser
-      this.$getLocation({})
+    this.$getLocation({})
         .then(coordinates => {
             this.coordinates = coordinates
         }).catch(error => {
             alert(error)
         })
+    
+    this.axios({
+        method: 'get',
+        url: '/zones',
+        baseURL: settings.baseURL,
+        headers:{
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+    }).then((response) =>{
+            for(var i in response.data.data){
+                this.zones.push(response.data.data[i])
+            }
+    }).catch(error => {
+        if(error.response){
+            console.error(error.response);
+        }
+    });
   },
+  mounted(){
+      this.$refs.mapRef.$mapPromise.then(map => this.map = map);
+  },
+  computed: {
+      mapCoordinates() {
+          if(!this.map){
+              return {
+                  lat: 0,
+                  lng: 0
+              }
+          }
+          return {
+              lat: this.map.getCenter().lat(),
+              lng: this.map.getCenter().lng()
+          }
+      }
+  },
+  methods: {
+      getPosition(zone) {
+          return {
+              lat: parseFloat(zone.Latitude),
+              lng: parseFloat(zone.Longitude)
+          }
+      },
+      infoWindowPosition(){
+          return {
+              lat: parseFloat(this.activeZone.Latitude),
+              lng: parseFloat(this.activeZone.Longitude)
+          }
+      },
+      handleMarkerClicked(zone){
+          this.activeZone = zone;
+          this.infoWindowOpened = true
+      },
+      handleInfoWindowClose(){
+          this.activeZone = {};
+          this.infoWindowOpened = false
+      }
+  }
 }
 </script>

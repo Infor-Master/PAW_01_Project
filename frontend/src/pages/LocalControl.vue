@@ -3,35 +3,19 @@
       <b-container>
         <b-row >
           <b-col>
-            <b-jumbotron header="Local" lead="Person">
-              <h1>Number of people: </h1>
-              <b-button class="button" size=lg variant="success">Add Person</b-button>
+            <b-jumbotron>
+              <template #header>{{zone.Name}}</template>
+              <template #lead>{{jwtDecoded.name}}</template>
+              <h1> Number of people: {{zone.PplCount}} </h1>
+              <b-button @click="addPerson" class="button" size=lg variant="success">Add Person</b-button>
               <p></p>
               <b-button class="button" size=lg variant="danger">Remove Person</b-button>
-              <VueTable />
+              <!--<VueTable />-->
             </b-jumbotron>
           </b-col>
         </b-row>
       </b-container>
-
-
-
-      <b-jumbotron header="Local" lead="Person">
-        <h1>Number of people: </h1>
-        <b-container class="bv-example-row">
-          <b-row>
-            <b-col>
-              <b-button class="button" size=lg variant="success">Add Person</b-button>
-           </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-button class="button" size=lg variant="danger">Remove Person</b-button>
-            </b-col>
-          </b-row>
-        </b-container>
-      </b-jumbotron>
-</div>
+  </div>
 </template>
 
 
@@ -39,17 +23,67 @@
 <script>
 
 import VueTable from '@/components/VueTable'
+import settings from '@/settings'
+//import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   props:{
-    VueTable    
+    VueTable  
   },
   data(){
     return{
-      zone: zone
+      zone: {},
+      jwtDecoded: {}
     }
+  },
+  methods: {
+    loadPage(){
+      try{
+        this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+      }catch(e){
+        console.error(e)
+      }
+      console.log(this.jwtDecoded)
+      this.axios({
+        method: 'get',
+        url: `/zones/${this.$route.params.id}`,
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+      }).then((response) =>{
+          this.zone = response.data.data
+      }).catch(error => {
+          if(error.response){
+            console.error(error.response);
+            this.message = error.response.status + " - " + error.response.statusText;
+          }
+        });
+    },
+    addPerson(){
+      this.axios({
+        method: 'post',
+        url: `/zones/${this.$route.params.id}/add`,
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        },
+        data: {
+            zoneId : this.$route.params.id,
+            workerId: VueJwtDecode.decode(localStorage.getItem('jwt')).id
+        }
+      }).then((response) =>{
+          this.zone = response.data.data
+      }).catch(error => {
+          if(error.response){
+            console.error(error.response);
+            this.message = error.response.status + " - " + error.response.statusText;
+          }
+        });
+    }
+  },
+  mounted() {
+    this.loadPage()
   }
 }
-
 </script>
-
