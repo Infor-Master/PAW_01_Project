@@ -3,4 +3,3 @@ psql apidb -U admin
 
 
 insert into workers (name, username, password, admin) values ('as','as','as','f');
-
