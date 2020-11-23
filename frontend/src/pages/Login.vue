@@ -43,6 +43,7 @@ export default {
       }).then(response => {
           console.log(response)
           localStorage.setItem('jwt',response.data.token)
+          // descompactar o jwt e guardar no localstorage o nome da criatura
           
           //descompactar jwt e fazer if para zones ou admin
           

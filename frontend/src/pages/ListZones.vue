@@ -60,6 +60,8 @@ export default {
           for(var i in response.data){
             this.zones.push(response.data[i])
            }
+          localStorage.setItem("zones",this.zones);
+
         })
         .catch(error => {
           if(error.response){

@@ -18,7 +18,7 @@
     "vue2-google-maps": "^0.10.7",
     "axios":"^0.21.0",
     "vue-axios": "^3.2.0",
-    "vue-jwt-decode":"^0.1.0",
+    "vue-jwt-decode": "^0.1.0",
     "vue-socket.io": "^3.0.10"
   },
   "devDependencies": {
