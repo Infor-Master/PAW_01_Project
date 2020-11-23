@@ -16,29 +16,39 @@
         </h3>
         <p>{{message}}</p>
         <hr class="my-2" />
-        <b-list-group>
-        <b-list-group-item v-for="(zone,index) in zones[0]"
-        :key="index">
-          {{zone.Name}}
-          <b-progress :value="value+5" show-value :max="max" class="mb-3"></b-progress>
+        <b-list-group >
+          
+          <b-list-group-item v-for="(zone,index) in zones[0]"
+            :key="index">
+            
+            <!--<template v-if="id_zone==zone.id">
+              {{zone.Name}}
+            </template>-->
+            {{zone.Name}}
+          <b-progress :value="zone.PplCount" show-value :max="zone.Limits" class="mb-3"></b-progress>
         </b-list-group-item>
+          
       </b-list-group>
         
       </template>
     </b-jumbotron>
+    <b-button variant="success" @click.prevent="map">
+      Map
+    </b-button>
   </div>
 </template>
 
 <script>
 import settings from '../settings'
+import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   data(){
     return{
       zones: [],
-      value: 33.333,
-      max:100,
       message: this.message,
+      jwtDecoded: {},
+      id_zone: 0
     }
   },
   methods: {
@@ -46,27 +56,58 @@ export default {
       localStorage.removeItem('jwt')
       this.$router.push({name: 'login'})
     },
-  },
-  mounted() {
+    map(){
+      this.$router.push({name: 'map'})
+    },
+    getAllZones(){
       this.message = "";
       this.axios({
         method: 'get',
-        url: '/zones',
+        url: `/zones/`,
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
-      }).then((response) =>{
+      })
+      .then((response) =>{
           for(var i in response.data){
             this.zones.push(response.data[i])
-           }
-        })
-        .catch(error => {
+         }
+      })
+      .catch(error => {
+        if(error.response){
+          console.error(error.response);
+          this.message = error.response.status + " - " + error.response.statusText;
+        }
+      });
+    },
+    getZoneOfWorker(){
+      try{
+        this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+        this.axios({
+          method: 'get',
+          url: `/workers/${this.jwtDecoded.id}`,
+          baseURL: settings.baseURL,
+          headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      }
+      }).then((response) =>{
+          this.id_zone=response.data
+          
+
+      }).catch(error => {
           if(error.response){
             console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
           }
         });
+        }catch(e){
+          console.error(e)
+        }
+      }
+  },
+  mounted() {
+      this.getAllZones();
+      this.getZoneOfWorker();
   }
 }
 </script>

@@ -44,6 +44,12 @@ func main() {
 		//zone.POST("/:id/add", routes.AddPerson)
 	}
 
+	worker := router.Group("/api/workers")
+	worker.Use(services.AuthorizationRequired())
+	{
+		worker.GET("/:id", routes.GetWorkerZoneByID)
+	}
+
 	admin := router.Group("/api/admin")
 	admin.Use(services.AuthorizationRequired())
 	{

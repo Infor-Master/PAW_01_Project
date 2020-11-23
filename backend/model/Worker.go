@@ -9,5 +9,4 @@ type Worker struct {
 	Name       string 
 	Admin      bool   `gorm:"default=false"`
 	Zones []*Zone `gorm:"many2many:worker_zone;"`
-	//ZoneID uint
 }

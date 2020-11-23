@@ -7,12 +7,11 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
 )
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-	
+
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -24,12 +23,12 @@ func GetZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
-	
-	var zone model.Zone;
+
+	var zone model.Zone
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
 		return
 	}
@@ -44,7 +43,6 @@ func GetZone(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-
 }
 
 func AddZone(c *gin.Context) {

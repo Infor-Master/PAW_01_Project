@@ -10,5 +10,4 @@ type Zone struct {
 	Limits      int "gorm:not null"
 	PplCount   int `gorm:"default=0"`
 	Workers []*Worker `gorm:"many2many:worker_zone;"`
-	//Workers []Worker `gorm:"foreignKey:ZoneID"`
 }
