@@ -55,7 +55,10 @@ const router = new VueRouter({
     {
       path: '/zones/:id',
       name: 'localControl',
-      component: LocalControl
+      component:{
+        VueJwtDecode,
+        LocalControl
+      } 
     },
     {
       path: '/admin/zones',

@@ -17,7 +17,6 @@ func init() {
 	services.OpenDatabase()
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
-	services.Db.AutoMigrate(&model.WorkersZone{})
 
 	defer services.Db.Close()
 }
@@ -42,6 +41,7 @@ func main() {
 	{
 		zone.GET("/", routes.GetZones)
 		zone.GET("/:id", routes.GetZone)
+		zone.POST("/:id/add", routes.AddPerson)
 	}
 
 	admin := router.Group("/api/admin")
