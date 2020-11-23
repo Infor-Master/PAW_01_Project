@@ -30,7 +30,8 @@
 </template>
 
 <script>
-//import settings from '../settings'
+import settings from '../settings'
+import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   data(){
@@ -39,6 +40,8 @@ export default {
       value: 33.333,
       max:100,
       message: this.message,
+      jwtDecoded: {},
+      id_zone: 0
     }
   },
   methods: {
@@ -46,30 +49,56 @@ export default {
       localStorage.removeItem('jwt')
       this.$router.push({name: 'login'})
     },
-  },
-  mounted() {
+    getAllZones(){
       this.message = "";
-      /*this.axios({
+      //this.axios.get('http://localhost:5000/api/zones/') 
+      this.axios({
         method: 'get',
-        url: '/zones',
+        url: `/zones/`,
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
-<<<<<<< HEAD
-      })*/
-      this.axios.get('http://localhost:8081/zones/')
-        .then((response) =>{
-            for(var i in response.data){
+      })
+      .then((response) =>{
+          for(var i in response.data){
             this.zones.push(response.data[i])
-           }
-        })
-        .catch(error => {
+         }
+      })
+      .catch(error => {
+        if(error.response){
+          console.error(error.response);
+          this.message = error.response.status + " - " + error.response.statusText;
+        }
+      });
+    },
+    getZoneOfWorker(){
+      try{
+        this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+        this.axios({
+          method: 'get',
+          url: `/workers/${this.jwtDecoded.id}`,
+          baseURL: settings.baseURL,
+          headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      }
+      }).then((response) =>{
+          this.id_zone=response.data
+          
+
+      }).catch(error => {
           if(error.response){
             console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
           }
         });
+        }catch(e){
+          console.error(e)
+        }
+      }
+  },
+  mounted() {
+      this.getAllZones();
+      this.getZoneOfWorker();
   }
 }
 </script>

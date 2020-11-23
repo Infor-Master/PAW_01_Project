@@ -17,7 +17,6 @@ func init() {
 	services.OpenDatabase()
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
-	services.Db.AutoMigrate(&model.WorkersZone{})
 
 	defer services.Db.Close()
 }
@@ -37,13 +36,18 @@ func main() {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
 	})
 
-
 	zone := router.Group("/api/zones")
 	zone.Use(services.AuthorizationRequired())
 	{
 		zone.GET("/", routes.GetZones)
 		zone.GET("/:id", routes.GetZone)
-	}*/
+	}
+
+	worker := router.Group("/api/workers")
+	worker.Use(services.AuthorizationRequired())
+	{
+		worker.GET("/:id", routes.GetWorkerZoneByID)
+	}
 
 	admin := router.Group("/api/admin")
 	admin.Use(services.AuthorizationRequired())
