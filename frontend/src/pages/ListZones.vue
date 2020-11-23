@@ -17,13 +17,8 @@
         <p>{{message}}</p>
         <hr class="my-2" />
         <b-list-group >
-          
           <b-list-group-item v-for="(zone,index) in zones[0]"
             :key="index">
-            
-            <!--<template v-if="id_zone==zone.id">
-              {{zone.Name}}
-            </template>-->
             {{zone.Name}}
           <b-progress :value="zone.PplCount" show-value :max="zone.Limits" class="mb-3"></b-progress>
         </b-list-group-item>
@@ -40,7 +35,7 @@
 
 <script>
 import settings from '../settings'
-import VueJwtDecode from 'vue-jwt-decode'
+//import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   data(){
@@ -81,7 +76,7 @@ export default {
         }
       });
     },
-    getZoneOfWorker(){
+    /*getZoneOfWorker(){
       try{
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
         this.axios({
@@ -94,7 +89,6 @@ export default {
       }).then((response) =>{
           this.id_zone=response.data
           
-
       }).catch(error => {
           if(error.response){
             console.error(error.response);
@@ -103,32 +97,32 @@ export default {
         }catch(e){
           console.error(e)
         }
-      }
+      }*/
   },
   mounted() {
       this.getAllZones();
-      this.getZoneOfWorker();
+      //this.getZoneOfWorker();
   }
 }
 </script>
 
 <style scoped>
-.list-group {
-  margin-bottom: 15px;
-}
-.list-group-item:hover {
-  background: #EEE;
-  cursor: pointer;
-}
-.myBtn{
-  position: absolute; 
-  right: 0;
-  width: 38%;
-  margin: auto;
-}
-.myDiv{
-  width: 70%;
-  align-content: center;
-  margin: auto;
-}
+  .list-group {
+    margin-bottom: 15px;
+  }
+  .list-group-item:hover {
+    background: #EEE;
+    cursor: pointer;
+  }
+  .myBtn{
+    position: absolute; 
+    right: 0;
+    width: 38%;
+    margin: auto;
+  }
+  .myDiv{
+    width: 70%;
+    align-content: center;
+    margin: auto;
+  }
 </style>

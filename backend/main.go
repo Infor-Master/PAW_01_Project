@@ -47,7 +47,7 @@ func main() {
 	worker := router.Group("/api/workers")
 	worker.Use(services.AuthorizationRequired())
 	{
-		worker.GET("/:id", routes.GetWorkerZoneByID)
+		//worker.GET("/:id", routes.GetWorkerZoneByID)
 	}
 
 	admin := router.Group("/api/admin")

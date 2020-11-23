@@ -1,14 +1,6 @@
 package controllers
 
-import (
-	"net/http"
-	"projetoapi/model"
-	"projetoapi/services"
-	"strconv"
-
-	"github.com/gin-gonic/gin"
-)
-
+/*
 func GetWorkerZoneByID(c *gin.Context) {
 
 	var worker model.Worker
@@ -30,4 +22,4 @@ func GetWorkerZoneByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": worker.ZoneID})
-}
+}*/
