@@ -30,6 +30,7 @@ Vue.use(VueGoogleMaps,  {
   installComponents: true,
 })
 
+
 const router = new VueRouter({
   routes: [
     {

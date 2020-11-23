@@ -16,16 +16,25 @@
         </h3>
         <p>{{message}}</p>
         <hr class="my-2" />
-        <b-list-group>
-        <b-list-group-item v-for="(zone,index) in zones[0]"
-        :key="index">
-          {{zone.Name}}
-          <b-progress :value="value+5" show-value :max="max" class="mb-3"></b-progress>
+        <b-list-group >
+          
+          <b-list-group-item v-for="(zone,index) in zones[0]"
+            :key="index">
+            
+            <!--<template v-if="id_zone==zone.id">
+              {{zone.Name}}
+            </template>-->
+            {{zone.Name}}
+          <b-progress :value="zone.PplCount" show-value :max="zone.Limits" class="mb-3"></b-progress>
         </b-list-group-item>
+          
       </b-list-group>
         
       </template>
     </b-jumbotron>
+    <b-button variant="success" @click.prevent="map">
+      Map
+    </b-button>
   </div>
 </template>
 
@@ -37,8 +46,6 @@ export default {
   data(){
     return{
       zones: [],
-      value: 33.333,
-      max:100,
       message: this.message,
       jwtDecoded: {},
       id_zone: 0
@@ -49,9 +56,11 @@ export default {
       localStorage.removeItem('jwt')
       this.$router.push({name: 'login'})
     },
+    map(){
+      this.$router.push({name: 'map'})
+    },
     getAllZones(){
       this.message = "";
-      //this.axios.get('http://localhost:5000/api/zones/') 
       this.axios({
         method: 'get',
         url: `/zones/`,
