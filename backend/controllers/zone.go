@@ -6,12 +6,10 @@ import (
 	"projetoapi/services"
 
 	"github.com/gin-gonic/gin"
-
 )
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-	
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -49,6 +47,7 @@ func DeleteZone(c *gin.Context) {
 	var zone model.Zone
 
 	id := c.Param("id")
+	
 	services.Db.First(&zone, id)
 
 	if zone.ID == 0 {

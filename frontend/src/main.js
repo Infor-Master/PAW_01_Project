@@ -14,12 +14,15 @@ import ListZones from './pages/ListZones.vue'
 import Register from './pages/Register.vue'
 import LocalControl from './pages/LocalControl.vue'
 import AddRemoveZone from './pages/AddRemoveZone.vue'
+import AdminPage from './pages/AdminPage.vue'
+import VueJwtDecode from 'vue-jwt-decode'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
 Vue.use(VueGeolocation)
+Vue.use(VueJwtDecode)
 Vue.use(VueGoogleMaps,  {
   load: {
     key: 'AIzaSyDvzBG1YC-EqqOau_4BMMAgK7p-t9nrYjE',
@@ -27,6 +30,7 @@ Vue.use(VueGoogleMaps,  {
   },
   installComponents: true,
 })
+
 
 const router = new VueRouter({
   routes: [
@@ -59,8 +63,34 @@ const router = new VueRouter({
       path: '/admin/zones',
       name: 'adminZones',
       component: AddRemoveZone
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminPage 
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  try{
+    let jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+    if(to.name == 'register' && !jwtDecoded.admin){
+      next({name: 'login'})
+    }else if(to.name == 'adminZones' && !jwtDecoded.admin){
+      next({name: 'login'})
+    }else if(to.name == 'admin' && !jwtDecoded.admin){
+      next({name: 'login'})
+    }else{
+      next()
+    }
+  }catch(e){
+    if(to.name != 'login'){
+      next({name: 'login'})
+    }else{
+      next()
+    }
+  }
 })
 
 new Vue({

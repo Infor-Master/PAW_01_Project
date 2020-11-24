@@ -18,6 +18,20 @@ func init() {
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
 
+	var admin model.Worker
+	admin.Username = "Admin"
+	admin.Name = "Test Admin Account"
+	admin.Password = "admin123"
+	admin.Admin = true
+	services.Db.Create(&admin)
+
+	var user model.Worker
+	user.Username = "TestUser"
+	user.Name = "Test User Account"
+	user.Password = "user123"
+	user.Admin = false
+	services.Db.Create(&user)
+
 	defer services.Db.Close()
 }
 
@@ -45,13 +59,21 @@ func main() {
 		zone.POST("/:id/remove", routes.RemovePerson)
 	}
 
+	worker := router.Group("/api/workers")
+	worker.Use(services.AuthorizationRequired())
+	{
+		//worker.GET("/:id", routes.GetWorkerZoneByID)
+	}
+
 	admin := router.Group("/api/admin")
 	admin.Use(services.AuthorizationRequired())
 	{
 		admin.GET("/zones", routes.GetZones)
 		admin.POST("/zones", routes.AddZone)
-		admin.DELETE("/zones/:id", routes.DeleteZone)
+		admin.DELETE("/zones", routes.DeleteZone)
+		admin.DELETE("/users", routes.DeleteUser)
 		admin.POST("/users", routes.Register)
+		admin.GET("/users", routes.GetUsers)
 	}
 
 	auth := router.Group("/api/")

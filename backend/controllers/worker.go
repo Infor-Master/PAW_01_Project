@@ -5,7 +5,6 @@ package controllers
 	var worker = GetWorker(c)
 }*/
 
-
 /*func Worker GetWorker(c *gin.Context){
 	var worker model.Worker;
 
