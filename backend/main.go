@@ -22,7 +22,7 @@ func init() {
 	admin.Username = "Admin"
 	admin.Name = "Test Admin Account"
 	admin.Password = "admin123"
-	admin.Admin = 0
+	admin.Admin = true
 	services.Db.Create(&admin)
 
 	var user model.Worker

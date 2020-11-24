@@ -5,7 +5,6 @@ package controllers
 	var worker = GetWorker(c)
 }*/
 
-
 /*func Worker GetWorker(c *gin.Context){
 	var worker model.Worker;
 
@@ -28,5 +27,4 @@ package controllers
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": worker})
 	return worker
 
-}*/
 }*/
