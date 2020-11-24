@@ -28,6 +28,7 @@
             @click="zoneHandler">
             {{zone.Name}}
           <b-progress :value="zone.PplCount" variant="dark" show-progress animated show-value :max="zone.Limits" class="mb-3"></b-progress>
+          <h6>Max: {{zone.Limits}} People</h6>
         </b-list-group-item>
           
       </b-list-group>
