@@ -72,6 +72,27 @@ const router = new VueRouter({
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  try{
+    let jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+    if(to.name == 'register' && !jwtDecoded.admin){
+      next({name: 'login'})
+    }else if(to.name == 'adminZones' && !jwtDecoded.admin){
+      next({name: 'login'})
+    }else if(to.name == 'admin' && !jwtDecoded.admin){
+      next({name: 'login'})
+    }else{
+      next()
+    }
+  }catch(e){
+    if(to.name != 'login'){
+      next({name: 'login'})
+    }else{
+      next()
+    }
+  }
+})
+
 new Vue({
   render: h => h(App),
   router
