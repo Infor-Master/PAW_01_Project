@@ -53,7 +53,7 @@ func main() {
 	zone := router.Group("/api/zones")
 	zone.Use(services.AuthorizationRequired())
 	{
-		zone.GET("/", routes.GetZones)
+		zone.GET("/", routes.GetWorkerZones)
 		zone.GET("/:id", routes.GetZone)
 		zone.POST("/:id/add", routes.AddPerson)
 		zone.POST("/:id/remove", routes.RemovePerson)
