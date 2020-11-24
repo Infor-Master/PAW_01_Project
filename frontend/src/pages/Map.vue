@@ -66,7 +66,7 @@ export default {
     
     this.axios({
         method: 'get',
-        url: '/zones',
+        url: '/zones/worker',
         baseURL: settings.baseURL,
         headers:{
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`

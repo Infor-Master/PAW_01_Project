@@ -10,7 +10,7 @@ import (
 
 func GetUsers(c *gin.Context) {
 	var workers []model.Worker
-	
+
 	services.Db.Find(&workers)
 
 	if len(workers) <= 0 {
@@ -21,7 +21,6 @@ func GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": workers})
 }
 
-
 func DeleteUser(c *gin.Context) {
 	var worker model.Worker
 
@@ -29,11 +28,12 @@ func DeleteUser(c *gin.Context) {
 
 	services.Db.First(&worker, id)
 
-	if worker.ID == 0  {
+	if worker.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
 		return
 	}
 
+	services.Db.Model(&worker).Association("zones").Delete(&worker)
 	services.Db.Delete(&worker)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }

@@ -53,10 +53,11 @@ func main() {
 	zone := router.Group("/api/zones")
 	zone.Use(services.AuthorizationRequired())
 	{
-		zone.GET("/", routes.GetWorkerZones)
-		zone.GET("/:id", routes.GetZone)
-		zone.POST("/:id/add", routes.AddPerson)
-		zone.POST("/:id/remove", routes.RemovePerson)
+		zone.GET("/all", routes.GetZones)
+		zone.GET("/worker", routes.GetWorkerZones)
+		zone.GET("/id/:id", routes.GetZone)
+		zone.POST("/id/:id/add", routes.AddPerson)
+		zone.POST("/id/:id/remove", routes.RemovePerson)
 	}
 
 	worker := router.Group("/api/workers")

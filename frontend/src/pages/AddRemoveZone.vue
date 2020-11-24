@@ -122,7 +122,7 @@ export default {
       this.message = "";
       this.axios({
         method: 'get',
-        url: '/zones',
+        url: '/zones/all',
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`

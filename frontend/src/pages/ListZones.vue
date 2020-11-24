@@ -70,7 +70,7 @@ export default {
         this.worker_name=this.jwtDecoded.name;
         this.axios({
           method: 'get',
-          url: `/zones`,
+          url: `/zones/worker`,
           baseURL: settings.baseURL,
           data: {
           id: this.id_worker,
@@ -92,7 +92,7 @@ export default {
           }
       },
       zoneHandler(id){
-        this.$router.push('/zones/'+id)
+        this.$router.push('/zones/id/'+id)
       }
   },
   mounted() {

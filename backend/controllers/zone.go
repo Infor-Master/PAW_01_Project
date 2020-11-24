@@ -73,6 +73,7 @@ func DeleteZone(c *gin.Context) {
 		return
 	}
 
+	services.Db.Model(&zone).Association("workers").Delete(&zone)
 	services.Db.Delete(&zone)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }
