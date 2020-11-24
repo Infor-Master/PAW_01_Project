@@ -59,3 +59,7 @@ func GetZone(c *gin.Context) {
 func AddPerson(c *gin.Context) {
 	controllers.AddPerson(c)
 }
+
+func RemovePerson(c *gin.Context) {
+	controllers.AddPerson(c)
+}
