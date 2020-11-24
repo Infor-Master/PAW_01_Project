@@ -49,8 +49,8 @@ func GenerateTokenJWT(credentials model.Worker) string {
 	return tokenString
 }
 
-func ValidateTokenJWT(c *gin.Context) bool {
-	token, b, done := getAuthorizationToken(c)
+func ValidateTokenJWT(c *gin.Context) (bool) {
+	token, b, done := GetAuthorizationToken(c)
 	if done {
 		return b
 	}
@@ -73,7 +73,7 @@ func ValidateTokenJWT(c *gin.Context) bool {
 	return true
 }
 
-func getAuthorizationToken(c *gin.Context) (string, bool, bool) {
+func GetAuthorizationToken(c *gin.Context) (string, bool, bool) {
 	var token string
 
 	reqToken := c.Request.Header.Get("Authorization")
