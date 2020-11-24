@@ -54,6 +54,7 @@ func main() {
 	zone.Use(services.AuthorizationRequired())
 	{
 		zone.GET("/", routes.GetWorkerZones)
+		zone.GET("/all", routes.GetZones)
 		zone.GET("/:id", routes.GetZone)
 		zone.POST("/:id/add", routes.AddPerson)
 		zone.POST("/:id/remove", routes.RemovePerson)
