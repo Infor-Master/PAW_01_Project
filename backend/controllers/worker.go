@@ -1,9 +1,10 @@
 package controllers
 
 /*
-func GetWorkerZoneByID(c *gin.Context) {
+func GetWorkerZones(c *gin.Context) {
 
 	var worker model.Worker
+	var zone model.Zone
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
@@ -22,4 +23,5 @@ func GetWorkerZoneByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": worker.ZoneID})
-}*/
+}
+*/

@@ -35,7 +35,7 @@
 
 <script>
 import settings from '../settings'
-//import VueJwtDecode from 'vue-jwt-decode'
+import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   data(){
@@ -43,7 +43,7 @@ export default {
       zones: [],
       message: this.message,
       jwtDecoded: {},
-      id_zone: 0
+      id_worker: 0
     }
   },
   methods: {
@@ -54,7 +54,7 @@ export default {
     map(){
       this.$router.push({name: 'map'})
     },
-    getAllZones(){
+    /*getAllZones(){
       this.message = "";
       this.axios({
         method: 'get',
@@ -75,33 +75,36 @@ export default {
           this.message = error.response.status + " - " + error.response.statusText;
         }
       });
-    },
-    /*getZoneOfWorker(){
+    },*/
+    getWorkerZones(){
       try{
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+        this.id_worker=this.jwtDecoded.id;
         this.axios({
           method: 'get',
-          url: `/workers/${this.jwtDecoded.id}`,
+          url: `/zones`,
           baseURL: settings.baseURL,
+          data: {
+          id: this.id_worker,
+          },
           headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      }
-      }).then((response) =>{
-          this.id_zone=response.data
-          
-      }).catch(error => {
-          if(error.response){
-            console.error(error.response);
           }
-        });
-        }catch(e){
-          console.error(e)
-        }
-      }*/
+          }).then((response) =>{
+              console.log(response.data)
+              
+          }).catch(error => {
+              if(error.response){
+                console.error(error.response);
+              }
+            });
+          }catch(e){
+            console.error(e)
+          }
+      }
   },
   mounted() {
-      this.getAllZones();
-      //this.getZoneOfWorker();
+      this.getWorkerZones();
   }
 }
 </script>
