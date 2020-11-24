@@ -11,7 +11,6 @@ import (
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -23,6 +22,26 @@ func GetZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
+
+	//worker
+
+	var claims = services.GetClaims(c)
+
+	if claims == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Something went bad!"})
+		return
+	}
+
+	var worker model.Worker
+
+	services.Db.Where("id = ?", claims.Id).First(&worker)
+
+	if worker.ID != claims.Id {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this worker!"})
+		return
+	}
+
+	/*// zone
 
 	var zone model.Zone
 
@@ -42,7 +61,17 @@ func GetZone(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	var temp model.Worker
+
+	services.Db.Where(&Worker{Id: worker.Id}, &Zone{Id:zone.Id}).First(&temp)
+
+	//fmt.Print("vamos la - >     ")
+	//fmt.Println(temp)
+
+	//db.Model(&zone).Related(&worker,  "Users")
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})*/
+
 }
 
 func AddZone(c *gin.Context) {
@@ -72,7 +101,6 @@ func DeleteZone(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }
 
-// nao esta feita ainda
 func AddPerson(c *gin.Context) {
 
 	var zone model.Zone
@@ -93,6 +121,46 @@ func AddPerson(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	if zone.PplCount <= zone.Limits {
+		zone.PplCount++
+
+		services.Db.Save(&zone)
+
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Added Person"})
+	}
+
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Limit exceeded!"})
 
 }
+
+func RemovePerson(c *gin.Context) {
+	
+	var zone model.Zone
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+		return
+	}
+
+	uintID := uint(id)
+
+	services.Db.Where("id = ?", uintID).First(&zone)
+
+	if zone.ID != uintID {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+		return
+	}
+
+	if zone.PplCount > 0{
+		zone.PplCount--
+		services.Db.Save(&zone)
+
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Removed Person"})
+	}
+
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Can't remove people if count is 0!"})
+
+}
+

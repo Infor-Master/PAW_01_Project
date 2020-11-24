@@ -15,7 +15,7 @@ func AuthorizationRequired() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "Not authorized"})
 			c.Abort()
 		} else {
-			var tokenInput, _, _ = getAuthorizationToken(c)
+			var tokenInput, _, _ = GetAuthorizationToken(c)
 			token, _ := jwt.ParseWithClaims(tokenInput, &model.Claims{}, func(token *jwt.Token) (interface{}, error) {
 				return JwtKey, nil
 			})

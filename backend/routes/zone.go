@@ -56,6 +56,10 @@ func GetZone(c *gin.Context) {
 	controllers.GetZone(c)
 }
 
-/*func AddPerson(c *gin.Context) {
+func AddPerson(c *gin.Context) {
 	controllers.AddPerson(c)
-}*/
+}
+
+func RemovePerson(c *gin.Context) {
+	controllers.AddPerson(c)
+}
