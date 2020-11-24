@@ -26,28 +26,15 @@ func GetWorkerZones(c *gin.Context) {
 	var worker model.Worker
 	var zones []model.Zone
 
-	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	var claims = services.GetClaims(c)
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+	if claims == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Something went bad!"})
 		return
 	}
 
-	uintID := uint(id)
-
-	services.Db.First(&worker, "id = ?", uintID)
+	services.Db.First(&worker, "id = ?", claims.Id)
 	services.Db.Model(&worker).Related(&zones, "zones")
-
-	//db.First(&language, "id = ?", 111)
-	//db.Model(&language).Related(&users,  "Users")
-	// SELECT * FROM "users" INNER JOIN "user_languages" ON
-	//"user_languages"."user_id" = "users"."id"
-	//WHERE  ("user_languages"."language_id" IN ('111'))
-
-	if worker.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-		return
-	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
 }
@@ -120,7 +107,7 @@ func DeleteZone(c *gin.Context) {
 	var zone model.Zone
 
 	id := c.Param("id")
-	
+
 	services.Db.First(&zone, id)
 
 	if zone.ID == 0 {
@@ -165,12 +152,12 @@ func AddPerson(c *gin.Context) {
 }
 
 func RemovePerson(c *gin.Context) {
-	
+
 	var zone model.Zone
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 
-	if err != nil{
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
 		return
 	}
@@ -184,7 +171,7 @@ func RemovePerson(c *gin.Context) {
 		return
 	}
 
-	if zone.PplCount > 0{
+	if zone.PplCount > 0 {
 		zone.PplCount--
 		services.Db.Save(&zone)
 
@@ -194,4 +181,3 @@ func RemovePerson(c *gin.Context) {
 	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Can't remove people if count is 0!"})
 
 }
-

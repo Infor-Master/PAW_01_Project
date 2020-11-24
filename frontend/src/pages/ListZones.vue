@@ -18,7 +18,8 @@
         <hr class="my-2" />
         <b-list-group >
           <b-list-group-item v-for="(zone,index) in zones[0]"
-            :key="index">
+            :key="index"
+            @click="zoneHandler">
             {{zone.Name}}
           <b-progress :value="zone.PplCount" show-value :max="zone.Limits" class="mb-3"></b-progress>
         </b-list-group-item>
@@ -54,28 +55,6 @@ export default {
     map(){
       this.$router.push({name: 'map'})
     },
-    /*getAllZones(){
-      this.message = "";
-      this.axios({
-        method: 'get',
-        url: `/zones/`,
-        baseURL: settings.baseURL,
-        headers:{
-          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-        }
-      })
-      .then((response) =>{
-          for(var i in response.data){
-            this.zones.push(response.data[i])
-         }
-      })
-      .catch(error => {
-        if(error.response){
-          console.error(error.response);
-          this.message = error.response.status + " - " + error.response.statusText;
-        }
-      });
-    },*/
     getWorkerZones(){
       try{
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
@@ -91,8 +70,9 @@ export default {
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           }
           }).then((response) =>{
-              console.log(response.data)
-              
+              for(var i in response.data){
+                this.zones.push(response.data[i])
+              }
           }).catch(error => {
               if(error.response){
                 console.error(error.response);
@@ -101,6 +81,9 @@ export default {
           }catch(e){
             console.error(e)
           }
+      },
+      zoneHandler(index){
+        this.$router.push('/zones/'+index)
       }
   },
   mounted() {
