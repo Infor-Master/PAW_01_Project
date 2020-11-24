@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
-	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
 func GetZones(c *gin.Context) {
 	var zones []model.Zone
-
 	services.Db.Find(&zones)
 
 	if len(zones) <= 0 {
@@ -21,27 +20,34 @@ func GetZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
 }
 
+func GetWorkerZones(c *gin.Context) {
+
+	var worker model.Worker
+	var zones []model.Zone
+
+	var claims = services.GetClaims(c)
+
+	if claims == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Something went bad!"})
+		return
+	}
+
+	services.Db.First(&worker, "id = ?", claims.Id)
+	services.Db.Model(&worker).Related(&zones, "zones")
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
+}
+
 func GetZone(c *gin.Context) {
 
-	var zone model.Zone
+	zone := services.FindZone(c)
 
-	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
-		return
+	if services.WorkerHasAccessToZone(c, zone) {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "Access Denied!"})
 	}
 
-	uintID := uint(id)
-
-	services.Db.Where("id = ?", uintID).First(&zone)
-
-	if zone.ID != uintID {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
 }
 
 func AddZone(c *gin.Context) {
@@ -71,27 +77,36 @@ func DeleteZone(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }
 
-// nao esta feita ainda
 func AddPerson(c *gin.Context) {
 
-	var zone model.Zone
+	zone := services.FindZone(c)
 
-	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if zone.PplCount <= zone.Limits {
+		zone.PplCount++
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+		services.Db.Save(&zone)
+
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Added Person"})
 		return
 	}
 
-	uintID := uint(id)
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Limit exceeded!"})
 
-	services.Db.Where("id = ?", uintID).First(&zone)
+}
 
-	if zone.ID != uintID {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+func RemovePerson(c *gin.Context) {
+
+	zone := services.FindZone(c)
+
+	if zone.PplCount > 0 {
+		zone.PplCount--
+
+		services.Db.Save(&zone)
+
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Removed Person"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
+	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Can't remove people if count is 0!"})
 
 }

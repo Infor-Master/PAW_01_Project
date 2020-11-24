@@ -16,14 +16,14 @@ export default {
   },
   methods: {
     handlerOnclickZones(){
-        this.$router.push('admin/zones')
+        this.$router.push({name: 'adminZones'})
     },
     handlerOnclickUsers(){
-        this.$router.push('admin/users')
+        this.$router.push({name: 'register'})
     },
     handlerOnclickZonesToUsers(){
-        this.$router.push('admin/zonestousers')
+        this.$router.push({name: 'zonestousers'})
     }
-},
+  },
 }  
 </script>

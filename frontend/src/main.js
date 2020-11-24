@@ -42,32 +42,122 @@ const router = new VueRouter({
     {
       path: '/map',
       name: 'map',
-      component: Map
+      component: Map,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else{
+          next()
+        }
+      }
     },
     {
       path: '/zones',
       name: 'zones',
-      component: ListZones
+      component: ListZones,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else{
+          next()
+        }
+      }
     },
     {
       path: '/admin/users',
       name: 'register',
-      component: Register
+      component: Register,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else {
+          try {
+            let decoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+            if(!decoded.admin){
+              next({ name: 'login' })
+            }else{
+              next()
+            }
+          } catch (error) {
+            next({ name: 'login' })
+          }
+        }
+      }
     },
     {
       path: '/zones/:id',
       name: 'localControl',
-      component:LocalControl
+      component:LocalControl,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else{
+          next()
+        }
+      }
     },
     {
       path: '/admin/zones',
       name: 'adminZones',
-      component: AddRemoveZone
+      component: AddRemoveZone,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else {
+          try {
+            let decoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+            if(!decoded.admin){
+              next({ name: 'login' })
+            }else{
+              next()
+            }
+          } catch (error) {
+            next({ name: 'login' })
+          }
+        }
+      }
     },
     {
       path: '/admin',
       name: 'admin',
-      component: AdminPage 
+      component: AdminPage,
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else {
+          try {
+            let decoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+            if(!decoded.admin){
+              next({ name: 'login' })
+            }else{
+              next()
+            }
+          } catch (error) {
+            next({ name: 'login' })
+          }
+        }
+      }
+    },
+    {
+      path: '/admin/zonestousers',
+      name: 'zonestousers',
+      component: AddRemoveZone,                 //ALTERAR PARA A CORRETA
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('jwt') === null){
+          next({ name: 'login' })
+        }else {
+          try {
+            let decoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+            if(!decoded.admin){
+              next({ name: 'login' })
+            }else{
+              next()
+            }
+          } catch (error) {
+            next({ name: 'login' })
+          }
+        }
+      }
     }
   ]
 })

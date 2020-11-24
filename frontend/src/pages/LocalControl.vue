@@ -9,7 +9,7 @@
               <h1> Number of people: {{zone.PplCount}} </h1>
               <b-button @click="addPerson" class="button" size=lg variant="success">Add Person</b-button>
               <p></p>
-              <b-button class="button" size=lg variant="danger">Remove Person</b-button>
+              <b-button @click="removePerson" class="button" size=lg variant="danger">Remove Person</b-button>
               <!--<VueTable />-->
             </b-jumbotron>
           </b-col>
@@ -55,8 +55,7 @@ export default {
           this.zone = response.data.data
       }).catch(error => {
           if(error.response){
-            console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
+            this.$router.push({'name':'zones'})
           }
         });
     },
@@ -67,13 +66,26 @@ export default {
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-        },
-        data: {
-            zoneId : this.$route.params.id,
-            workerId: VueJwtDecode.decode(localStorage.getItem('jwt')).id
         }
       }).then((response) =>{
-          this.zone = response.data.data
+          console.log(response)
+      }).catch(error => {
+          if(error.response){
+            console.error(error.response);
+            this.message = error.response.status + " - " + error.response.statusText;
+          }
+        });
+    },
+    removePerson(){
+      this.axios({
+        method: 'post',
+        url: `/zones/${this.$route.params.id}/remove`,
+        baseURL: settings.baseURL,
+        headers:{
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+      }).then((response) =>{
+          console.log(response)
       }).catch(error => {
           if(error.response){
             console.error(error.response);

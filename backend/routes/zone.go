@@ -20,6 +20,10 @@ func GetZones(c *gin.Context) {
 	controllers.GetZones(c)
 }
 
+func GetWorkerZones(c *gin.Context) {
+	controllers.GetWorkerZones(c)
+}
+
 // @Summary Adicionar uma zona
 // @Description Cria uma avaliação sobre a utilização da aplicação
 // @Accept  json
@@ -50,12 +54,14 @@ func DeleteZone(c *gin.Context) {
 	controllers.DeleteZone(c)
 }
 
-
-
 func GetZone(c *gin.Context) {
 	controllers.GetZone(c)
 }
 
-/*func AddPerson(c *gin.Context) {
+func AddPerson(c *gin.Context) {
 	controllers.AddPerson(c)
-}*/
+}
+
+func RemovePerson(c *gin.Context) {
+	controllers.AddPerson(c)
+}

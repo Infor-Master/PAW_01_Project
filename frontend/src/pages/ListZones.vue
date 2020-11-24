@@ -2,9 +2,15 @@
   <div class="myDiv">
     <br>
     <div class="myBtn">
-      <b-button variant="success" @click.prevent="logout">
-        Logout
+      
+      <b-button variant="success" @click="$bvToast.show('example-toast')">
+        {{this.worker_name}}
       </b-button>
+      <b-toast id="example-toast" title="Logout?" static no-auto-hide>
+        <b-button variant="secondary" @click.prevent="logout">
+          Yes
+        </b-button>
+      </b-toast>
     </div>
     <br><br><br>
     <b-jumbotron>
@@ -18,9 +24,11 @@
         <hr class="my-2" />
         <b-list-group >
           <b-list-group-item v-for="(zone,index) in zones[0]"
-            :key="index">
+            :key="index"
+            @click="zoneHandler(zone.ID)">
             {{zone.Name}}
-          <b-progress :value="zone.PplCount" show-value :max="zone.Limits" class="mb-3"></b-progress>
+          <b-progress :value="zone.PplCount" variant="dark" show-progress animated show-value :max="zone.Limits" class="mb-3"></b-progress>
+          <h6>Max: {{zone.Limits}} People</h6>
         </b-list-group-item>
           
       </b-list-group>
@@ -35,7 +43,7 @@
 
 <script>
 import settings from '../settings'
-//import VueJwtDecode from 'vue-jwt-decode'
+import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   data(){
@@ -43,7 +51,8 @@ export default {
       zones: [],
       message: this.message,
       jwtDecoded: {},
-      id_zone: 0
+      id_worker: 0,
+      worker_name: null
     }
   },
   methods: {
@@ -54,54 +63,40 @@ export default {
     map(){
       this.$router.push({name: 'map'})
     },
-    getAllZones(){
-      this.message = "";
-      this.axios({
-        method: 'get',
-        url: `/zones/`,
-        baseURL: settings.baseURL,
-        headers:{
-          'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-        }
-      })
-      .then((response) =>{
-          for(var i in response.data){
-            this.zones.push(response.data[i])
-         }
-      })
-      .catch(error => {
-        if(error.response){
-          console.error(error.response);
-          this.message = error.response.status + " - " + error.response.statusText;
-        }
-      });
-    },
-    /*getZoneOfWorker(){
+    getWorkerZones(){
       try{
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+        this.id_worker=this.jwtDecoded.id;
+        this.worker_name=this.jwtDecoded.name;
         this.axios({
           method: 'get',
-          url: `/workers/${this.jwtDecoded.id}`,
+          url: `/zones`,
           baseURL: settings.baseURL,
+          data: {
+          id: this.id_worker,
+          },
           headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      }
-      }).then((response) =>{
-          this.id_zone=response.data
-          
-      }).catch(error => {
-          if(error.response){
-            console.error(error.response);
           }
-        });
-        }catch(e){
-          console.error(e)
-        }
-      }*/
+          }).then((response) =>{
+              for(var i in response.data){
+                this.zones.push(response.data[i])
+              }
+          }).catch(error => {
+              if(error.response){
+                console.error(error.response);
+              }
+            });
+          }catch(e){
+            console.error(e)
+          }
+      },
+      zoneHandler(id){
+        this.$router.push('/zones/'+id)
+      }
   },
   mounted() {
-      this.getAllZones();
-      //this.getZoneOfWorker();
+      this.getWorkerZones();
   }
 }
 </script>
@@ -118,6 +113,7 @@ export default {
     position: absolute; 
     right: 0;
     width: 38%;
+    height: 40%;
     margin: auto;
   }
   .myDiv{

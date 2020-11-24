@@ -19,6 +19,7 @@
 
 <script>
 import settings from '../settings'
+import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
   name: "Login",
@@ -43,23 +44,16 @@ export default {
       }).then(response => {
           console.log(response)
           localStorage.setItem('jwt',response.data.token)
-          // descompactar o jwt e guardar no localstorage o nome da criatura
-          
-          //descompactar jwt e fazer if para zones ou admin
-          
-          this.$router.push('zones')
-
-          /*
-          let is_admin = response.data.user.is_admin
-          localStorage.setItem('user',JSON.stringify(response.data.user))
-          if (localStorage.getItem('jwt') != null){
-            if(is_admin== 1){
-              this.$router.push('admin')
-            }else {
-              this.$router.push('map')
+          try{
+            let jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
+            if(jwtDecoded.admin){
+              this.$router.push({name: 'admin'})
+            }else{
+              this.$router.push({name: 'zones'})
             }
-          } 
-          */
+          }catch(e){
+            console.error(e)
+          }
         }).catch(error => {
           // para ter acesso ao this.message, o catch tem de usar função via seta "=>"
           if(error.response){
