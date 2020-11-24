@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,12 +39,12 @@ func GetWorkerZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
 
-	if services.WorkerHasAccessToZone(c, zone){
+	zone := services.FindZone(c)
+
+	if services.WorkerHasAccessToZone(c, zone) {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-	} else{
+	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "Access Denied!"})
 	}
 
@@ -79,8 +78,8 @@ func DeleteZone(c *gin.Context) {
 }
 
 func AddPerson(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
+
+	zone := services.FindZone(c)
 
 	if zone.PplCount <= zone.Limits {
 		zone.PplCount++
@@ -96,12 +95,12 @@ func AddPerson(c *gin.Context) {
 }
 
 func RemovePerson(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
+
+	zone := services.FindZone(c)
 
 	if zone.PplCount > 0 {
 		zone.PplCount--
-		
+
 		services.Db.Save(&zone)
 
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Removed Person"})
