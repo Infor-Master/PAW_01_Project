@@ -18,6 +18,20 @@ func init() {
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
 
+	var admin model.Worker
+	admin.Username = "Admin"
+	admin.Name = "Test Admin Account"
+	admin.Password = "admin123"
+	admin.Admin = 0
+	services.Db.Create(&admin)
+
+	var user model.Worker
+	user.Username = "TestUser"
+	user.Name = "Test User Account"
+	user.Password = "user123"
+	user.Admin = false
+	services.Db.Create(&user)
+
 	defer services.Db.Close()
 }
 
