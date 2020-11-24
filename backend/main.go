@@ -71,8 +71,8 @@ func main() {
 	{
 		admin.GET("/zones", routes.GetZones)
 		admin.POST("/zones", routes.AddZone)
-		admin.DELETE("/zones", routes.DeleteZone)
-		admin.DELETE("/users", routes.DeleteUser)
+		admin.DELETE("/zones/:id", routes.DeleteZone)
+		admin.DELETE("/users/:id", routes.DeleteUser)
 		admin.POST("/users", routes.Register)
 		admin.GET("/users", routes.GetUsers)
 	}
