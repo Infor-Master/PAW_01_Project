@@ -25,7 +25,7 @@
         <b-list-group >
           <b-list-group-item v-for="(zone,index) in zones[0]"
             :key="index"
-            @click="zoneHandler">
+            @click="zoneHandler(index)">
             {{zone.Name}}
           <b-progress :value="zone.PplCount" variant="dark" show-progress animated show-value :max="zone.Limits" class="mb-3"></b-progress>
           <h6>Max: {{zone.Limits}} People</h6>
@@ -92,6 +92,7 @@ export default {
           }
       },
       zoneHandler(index){
+        index++
         this.$router.push('/zones/'+index)
       }
   },
