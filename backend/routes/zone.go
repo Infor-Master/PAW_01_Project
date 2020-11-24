@@ -61,5 +61,5 @@ func AddPerson(c *gin.Context) {
 }
 
 func RemovePerson(c *gin.Context) {
-	controllers.AddPerson(c)
+	controllers.RemovePerson(c)
 }
