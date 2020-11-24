@@ -7,7 +7,9 @@
    <form 
     class="addZone"
     @submit.prevent="handlerSubmitAdd">
-    
+    <hr>
+    {{this.zones}}
+    <hr>
      <label>Name</label>
      <input required v-model="name" type="text" placeholder="Name"/>
      <p/>
@@ -27,7 +29,7 @@
    <form 
     class="RemoveZone" @submit.prevent="handlerSubmitRemove()">
 
-    <b-form-select v-model="selected" :plain="true" :options="this.zonesOptions" />
+    <b-form-select v-model="selected" :plain="true" :options="this.zoneOptions" />
 
     <button type="submit">Remove</button>
    </form>
@@ -35,15 +37,15 @@
 </template>
 
 <script>
-import settings from '../settings';
+  import settings from '../settings';
 
-export default {
+  export default {
   name: 'addRemoveZone',
   data(){
     return {
+      zones: [],
+      zoneOptions: [],
       selected: '',
-      zonesOptions: [],
-      aux:[],
       message: this.message,
       name: this.name,
       latitude: this.latitude,
@@ -51,10 +53,10 @@ export default {
       limits: this.limits
     };
   },
- methods: {
-   handlerOnclickBack(){
-     this.$router.go(-1)
-   },
+  methods: {
+    handlerOnclickBack(){
+      this.$router.go(-1)
+    },
     handlerSubmitAdd(){
       this.message = "";
       this.axios({
@@ -62,63 +64,60 @@ export default {
         url: '/admin/zones',
         baseURL: settings.baseURL,
         data: {
-            name: this.name,
-            latitude: parseFloat(this.latitude),
-            longitude: parseFloat(this.longitude),
-            limits: parseInt(this.limits)
+          name: this.name,
+          latitude: parseFloat(this.latitude),
+          longitude: parseFloat(this.longitude),
+          limits: parseInt(this.limits)
         },
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
-      }).then(response => {
-          console.log("ADD ZONE "+response);
-          this.message = "Zone Registado!"
-        }).catch(error => {
-          if(error.response){
-            console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
-          }
-        });
-    },handlerSubmitRemove(){
-
-      var temp = 0;
-    
-      for(var j = 0; j < this.aux.length; j++){
-        const aux = this.aux[j]["Name"];
-        
-        const aux2 = this.selected;
-
-        if(aux===aux2){
-          temp=j+1;
+      })
+      .then(response => {
+        console.log("ADD ZONE "+response);
+        this.message = "Zone Registado!"
+        this.getAllZones();
+      })
+      .catch(error => {
+        if(error.response){
+          console.error(error.response);
+          this.message = error.response.status + " - " + error.response.statusText;
         }
-       
-        console.log(temp);
+      });
+    },
+    handlerSubmitRemove(){
 
+      var zoneID = 0;
+
+      for(var j = 0; j < this.zones.length; j++){
+      console.log(this.selected)
+        if(this.zones[j]["name"]===this.selected){
+          zoneID=this.zones[j].id;
+        }
       }
 
-        this.message = "";
-        this.axios({
+      this.message = "";
+      this.axios({
         method: 'delete',
-        url: '/admin/zones',
+        url: `admin/zones/`+zoneID,
         baseURL: settings.baseURL,
-        data: {
-          id: temp,
-        },
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
-      }).then(response => {
-          console.log(response);
-          this.message = "Zone Deleted!"
-        }).catch(error => {
-          if(error.response){
-            console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
-          }
-        });
-    },
+      })
+      .then(response => {
+        console.log(response);
+        this.message = "Zone Deleted!"
+      })
+      .catch(error => {
+        if(error.response){
+          console.error(error.response);
+          this.message = error.response.status + " - " + error.response.statusText;
+        }
+      });
+    }
   },
-  mounted() {
+  mounted(){
       this.message = "";
       this.axios({
         method: 'get',
@@ -127,24 +126,26 @@ export default {
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
-      }).then((response) =>{
-
+      })
+      .then((response) =>{
         this.aux=response.data["data"];
+            
+        for(var j = 0; j < this.aux.length; j++){
 
-            for(var j = 0; j < this.aux.length; j++){
-            var option = []
-            option["name"] = this.aux[j]["Name"]
-
-             this.zonesOptions.push(option['name'])
-
-          }
-        })
-        .catch(error => {
-          if(error.response){
-            console.error(error.response);
-            this.message = error.response.status + " - " + error.response.statusText;
-          }
-        });
-  }
+          this.zoneOptions.push(this.aux[j]["Name"])
+          this.zones.push({
+            "name": this.aux[j]["Name"],
+            "id": this.aux[j]["ID"]
+          })
+        }
+      })
+      .catch(error => {
+        if(error.response){
+          console.error(error.response);
+          this.message = error.response.status + " - " + error.response.statusText;
+        }
+      })
+    },
 }
+
 </script>

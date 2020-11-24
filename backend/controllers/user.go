@@ -27,9 +27,9 @@ func DeleteUser(c *gin.Context) {
 
 	id := c.Param("id")
 
-	services.Db.First(&worker, id)
+	services.Db.Where("id = ?", id).Find(&worker,id)
 
-	if worker.ID == 0  {
+	if worker.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
 		return
 	}

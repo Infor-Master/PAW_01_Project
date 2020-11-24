@@ -5,7 +5,6 @@ import (
 	"projetoapi/model"
 	"projetoapi/services"
 	"strconv"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -60,8 +59,8 @@ func DeleteZone(c *gin.Context) {
 	var zone model.Zone
 
 	id := c.Param("id")
-	
-	services.Db.First(&zone, id)
+
+	services.Db.Where("id = ?", id).Find(&zone,id)
 
 	if zone.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
