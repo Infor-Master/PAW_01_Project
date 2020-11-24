@@ -2,9 +2,15 @@
   <div class="myDiv">
     <br>
     <div class="myBtn">
-      <b-button variant="success" @click.prevent="logout">
-        Logout
+      
+      <b-button variant="success" @click="$bvToast.show('example-toast')">
+        {{this.worker_name}}
       </b-button>
+      <b-toast id="example-toast" title="Logout?" static no-auto-hide>
+        <b-button variant="secondary" @click.prevent="logout">
+          Yes
+        </b-button>
+      </b-toast>
     </div>
     <br><br><br>
     <b-jumbotron>
@@ -21,7 +27,7 @@
             :key="index"
             @click="zoneHandler">
             {{zone.Name}}
-          <b-progress :value="zone.PplCount" show-value :max="zone.Limits" class="mb-3"></b-progress>
+          <b-progress :value="zone.PplCount" variant="dark" show-progress animated show-value :max="zone.Limits" class="mb-3"></b-progress>
         </b-list-group-item>
           
       </b-list-group>
@@ -44,7 +50,8 @@ export default {
       zones: [],
       message: this.message,
       jwtDecoded: {},
-      id_worker: 0
+      id_worker: 0,
+      worker_name: null
     }
   },
   methods: {
@@ -59,6 +66,7 @@ export default {
       try{
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
         this.id_worker=this.jwtDecoded.id;
+        this.worker_name=this.jwtDecoded.name;
         this.axios({
           method: 'get',
           url: `/zones`,
@@ -104,6 +112,7 @@ export default {
     position: absolute; 
     right: 0;
     width: 38%;
+    height: 40%;
     margin: auto;
   }
   .myDiv{
