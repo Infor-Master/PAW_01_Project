@@ -1,5 +1,6 @@
 <template>
     <div>
+    <button v-on:click="handlerOnclickBack">Back</button>
       <b-container>
         <b-row >
           <b-col>
@@ -92,7 +93,10 @@ export default {
             this.message = error.response.status + " - " + error.response.statusText;
           }
         });
-    }
+    },
+    handlerOnclickBack(){
+      this.$router.go(-1)
+    },
   },
   mounted() {
     this.loadPage()
