@@ -1,19 +1,28 @@
 <template>
  <div>
+   <br>
+   <b-card bg-variant="light" class="bCard">
    <form 
     class="login"
     @submit.prevent="handlerSubmit"
    >
-     <h1>Sign in</h1>
-     <label>User name</label>
-     <input required v-model="username" type="text" placeholder="Username"/>
-     <hr/>
-     <label>Password</label>
-     <input required v-model="password" type="password" placeholder="Password"/>
-     <hr/>
-     <button type="submit">Login</button>
-     <p>{{message}}</p>
+      <h3>Sign in</h3>
+      <br>
+      <div class="signInForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input required v-model="username" class="form-control form-control-lg" type="text" placeholder="Username"/>
+        </div>
+        
+        <div class="form-group">
+          <label>Password</label>
+          <input required v-model="password" class="form-control form-control-lg" type="password" placeholder="Password"/>
+        </div>
+        <button type="submit" class="btn btn-dark btn-lg btn-block">Login</button>
+      </div>
+      <p>{{message}}</p>
    </form>
+   </b-card>
  </div>
 </template>
 
@@ -65,3 +74,16 @@ export default {
   },
 };
 </script>
+
+<style>
+.bCard{
+  width: 50%;
+  margin: auto;
+}
+html, 
+body {
+    margin: 0;
+    padding: 0;
+    background-color:rgb(131, 130, 130);
+}
+</style>
