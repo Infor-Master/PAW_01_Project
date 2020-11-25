@@ -20,13 +20,33 @@ func GetZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
 }
 
+func GetWorkerZones(c *gin.Context) {
+
+	var worker model.Worker
+	var zones []model.Zone
+
+	var claims = services.GetClaims(c)
+
+	if claims == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Something went bad!"})
+		return
+	}
+
+	services.Db.First(&worker, "id = ?", claims.Id)
+	services.Db.Model(&worker).Related(&zones, "zones")
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
+}
+
 func GetZone(c *gin.Context) {
 	
 	zone := services.FindZone(c) 
 
-	if services.WorkerHasAccessToZone(c, zone){
+	zone := services.FindZone(c)
+
+	if services.WorkerHasAccessToZone(c, zone) {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
-	} else{
+	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "Access Denied!"})
 	}
 
@@ -47,21 +67,23 @@ func DeleteZone(c *gin.Context) {
 	var zone model.Zone
 
 	id := c.Param("id")
-	
-	services.Db.First(&zone, id)
+
+	services.Db.Where("id = ?", id).Find(&zone, id)
 
 	if zone.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
 		return
 	}
 
+	services.Db.Model(&zone).Association("workers").Clear()
 	services.Db.Delete(&zone)
+
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }
 
 func AddPerson(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
+
+	zone := services.FindZone(c)
 
 	if zone.PplCount <= zone.Limits {
 		zone.PplCount++
@@ -77,12 +99,12 @@ func AddPerson(c *gin.Context) {
 }
 
 func RemovePerson(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
 
-	if zone.PplCount > 0{
+	zone := services.FindZone(c)
+
+	if zone.PplCount > 0 {
 		zone.PplCount--
-		
+
 		services.Db.Save(&zone)
 
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Removed Person"})
@@ -92,4 +114,3 @@ func RemovePerson(c *gin.Context) {
 	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Can't remove people if count is 0!"})
 
 }
-

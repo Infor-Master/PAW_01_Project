@@ -17,21 +17,21 @@ func init() {
 	services.OpenDatabase()
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
+	/*
+		var admin model.Worker
+		admin.Username = "Admin"
+		admin.Name = "Test Admin Account"
+		admin.Password = "admin123"
+		admin.Admin = true
+		services.Db.Create(&admin)
 
-	var admin model.Worker
-	admin.Username = "Admin"
-	admin.Name = "Test Admin Account"
-	admin.Password = "admin123"
-	admin.Admin = true
-	services.Db.Create(&admin)
-
-	var user model.Worker
-	user.Username = "TestUser"
-	user.Name = "Test User Account"
-	user.Password = "user123"
-	user.Admin = false
-	services.Db.Create(&user)
-
+		var user model.Worker
+		user.Username = "TestUser"
+		user.Name = "Test User Account"
+		user.Password = "user123"
+		user.Admin = false
+		services.Db.Create(&user)
+	*/
 	defer services.Db.Close()
 }
 
@@ -53,10 +53,11 @@ func main() {
 	zone := router.Group("/api/zones")
 	zone.Use(services.AuthorizationRequired())
 	{
-		zone.GET("/", routes.GetZones)
-		zone.GET("/:id", routes.GetZone)
-		zone.POST("/:id/add", routes.AddPerson)
-		zone.POST("/:id/remove", routes.RemovePerson)
+		zone.GET("/all", routes.GetZones)
+		zone.GET("/worker", routes.GetWorkerZones)
+		zone.GET("/id/:id", routes.GetZone)
+		zone.POST("/id/:id/add", routes.AddPerson)
+		zone.POST("/id/:id/remove", routes.RemovePerson)
 	}
 
 	worker := router.Group("/api/workers")
@@ -70,8 +71,8 @@ func main() {
 	{
 		admin.GET("/zones", routes.GetZones)
 		admin.POST("/zones", routes.AddZone)
-		admin.DELETE("/zones", routes.DeleteZone)
-		admin.DELETE("/users", routes.DeleteUser)
+		admin.DELETE("/zones/:id", routes.DeleteZone)
+		admin.DELETE("/users/:id", routes.DeleteUser)
 		admin.POST("/users", routes.Register)
 		admin.GET("/users", routes.GetUsers)
 	}

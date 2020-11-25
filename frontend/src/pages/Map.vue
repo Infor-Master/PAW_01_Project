@@ -1,5 +1,9 @@
 <template>
  <div>
+     <p>
+    <button v-on:click="handlerOnclickBack">Back</button>
+    <p>
+
    <h1>Coords:</h1>
    <p>Localização atual: {{ coordinates.lat }} Latitude, {{ coordinates.lng }} Longitude</p>
    <p>Localização mapa: {{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }} Longitude</p>
@@ -66,7 +70,7 @@ export default {
     
     this.axios({
         method: 'get',
-        url: '/zones',
+        url: '/zones/worker',
         baseURL: settings.baseURL,
         headers:{
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -99,6 +103,9 @@ export default {
       }
   },
   methods: {
+      handlerOnclickBack(){
+     this.$router.go(-1)
+   },
       getPosition(zone) {
           return {
               lat: parseFloat(zone.Latitude),

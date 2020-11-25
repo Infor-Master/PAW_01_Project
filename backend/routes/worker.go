@@ -6,11 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
-func GetWorkerZoneByID(c *gin.Context) {
-	controllers.GetWorkerZoneByID(c)
-}*/
-
 // @Summary Recupera os users
 // @Description Exibe a lista, sem todos os campos, de todas as zonas
 // @Accept  json

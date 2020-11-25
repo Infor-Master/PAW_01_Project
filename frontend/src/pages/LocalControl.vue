@@ -46,7 +46,7 @@ export default {
       console.log(this.jwtDecoded)
       this.axios({
         method: 'get',
-        url: `/zones/${this.$route.params.id}`,
+        url: `/zones/id/${this.$route.params.id}`,
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -62,7 +62,7 @@ export default {
     addPerson(){
       this.axios({
         method: 'post',
-        url: `/zones/${this.$route.params.id}/add`,
+        url: `/zones/id/${this.$route.params.id}/add`,
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -79,7 +79,7 @@ export default {
     removePerson(){
       this.axios({
         method: 'post',
-        url: `/zones/${this.$route.params.id}/remove`,
+        url: `/zones/id/${this.$route.params.id}/remove`,
         baseURL: settings.baseURL,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
