@@ -33,7 +33,7 @@ export default {
   data(){
     return{
       zone: {},
-      jwtDecoded: {}
+      jwtDecoded: {},
     }
   },
   methods: {
