@@ -39,6 +39,8 @@ func GetWorkerZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
+	
+	zone := services.FindZone(c) 
 
 	zone := services.FindZone(c)
 
