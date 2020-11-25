@@ -17,21 +17,21 @@ func init() {
 	services.OpenDatabase()
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
-	/*
-		var admin model.Worker
-		admin.Username = "Admin"
-		admin.Name = "Test Admin Account"
-		admin.Password = "admin123"
-		admin.Admin = true
-		services.Db.Create(&admin)
+	
+	var admin model.Worker
+	admin.Username = "Admin"
+	admin.Name = "Test Admin Account"
+	admin.Password = "admin123"
+	admin.Admin = true
+	services.Db.Create(&admin)
 
-		var user model.Worker
-		user.Username = "TestUser"
-		user.Name = "Test User Account"
-		user.Password = "user123"
-		user.Admin = false
-		services.Db.Create(&user)
-	*/
+	var user model.Worker
+	user.Username = "TestUser"
+	user.Name = "Test User Account"
+	user.Password = "user123"
+	user.Admin = false
+	services.Db.Create(&user)
+	
 	defer services.Db.Close()
 }
 
@@ -70,9 +70,11 @@ func main() {
 	admin.Use(services.AuthorizationRequired())
 	{
 		admin.GET("/zones", routes.GetZones)
+		admin.POST("/associate", routes.AssociateUsersZones)
 		admin.POST("/zones", routes.AddZone)
 		admin.DELETE("/zones/:id", routes.DeleteZone)
 		admin.DELETE("/users/:id", routes.DeleteUser)
+		admin.DELETE("/associate", routes.DesassociateUsersZones)
 		admin.POST("/users", routes.Register)
 		admin.GET("/users", routes.GetUsers)
 	}
