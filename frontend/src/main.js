@@ -85,7 +85,7 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/zones/:id',
+      path: '/zones/id/:id',
       name: 'localControl',
       component:LocalControl,
       beforeEnter: (to, from, next) => {

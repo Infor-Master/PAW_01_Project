@@ -3,10 +3,10 @@
     <br>
     <div class="myBtn">
       
-      <b-button variant="success" @click="$bvToast.show('example-toast')">
+      <b-button variant="success" @click="$bvToast.show('toast')">
         {{this.worker_name}}
       </b-button>
-      <b-toast id="example-toast" title="Logout?" static no-auto-hide>
+      <b-toast id="toast" title="Logout?" static no-auto-hide>
         <b-button variant="secondary" @click.prevent="logout">
           Yes
         </b-button>

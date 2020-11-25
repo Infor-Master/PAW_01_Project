@@ -66,15 +66,16 @@ func DeleteZone(c *gin.Context) {
 
 	id := c.Param("id")
 
-	services.Db.Where("id = ?", id).Find(&zone,id)
+	services.Db.Where("id = ?", id).Find(&zone, id)
 
 	if zone.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
 		return
 	}
 
-	services.Db.Model(&zone).Association("workers").Delete(&zone)
+	services.Db.Model(&zone).Association("workers").Clear()
 	services.Db.Delete(&zone)
+
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }
 

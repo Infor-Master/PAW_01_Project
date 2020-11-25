@@ -26,14 +26,14 @@ func DeleteUser(c *gin.Context) {
 
 	id := c.Param("id")
 
-	services.Db.Where("id = ?", id).Find(&worker,id)
+	services.Db.Where("id = ?", id).Find(&worker, id)
 
 	if worker.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "None found!"})
 		return
 	}
 
-	services.Db.Model(&worker).Association("zones").Delete(&worker)
+	services.Db.Model(&worker).Association("zones").Clear()
 	services.Db.Delete(&worker)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Delete succeeded!"})
 }
