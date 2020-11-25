@@ -21,17 +21,10 @@ func init() {
 	var admin model.Worker
 	admin.Username = "Admin"
 	admin.Name = "Test Admin Account"
-	admin.Password = "admin123"
+	admin.Password = services.HashAndSalt([]byte("admin123"))
 	admin.Admin = true
-	services.Db.Create(&admin)
+	services.Db.Save(&admin)
 
-	var user model.Worker
-	user.Username = "TestUser"
-	user.Name = "Test User Account"
-	user.Password = "user123"
-	user.Admin = false
-	services.Db.Create(&user)
-	
 	defer services.Db.Close()
 }
 

@@ -21,7 +21,6 @@ func AuthorizationRequired() gin.HandlerFunc {
 			})
 
 			if claims, ok := token.Claims.(*model.Claims); ok && token.Valid {
-				//fmt.Printf("%v %v", claims.Username, claims.StandardClaims.ExpiresAt)
 				c.Set("username", claims.Username)
 			}
 			OpenDatabase()

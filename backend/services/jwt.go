@@ -89,3 +89,16 @@ func GetAuthorizationToken(c *gin.Context) (string, bool, bool) {
 	}
 	return token, false, false
 }
+
+func GetClaims(c *gin.Context) *model.Claims {
+
+	var tokenInput, _, _ = GetAuthorizationToken(c)
+	token, _ := jwt.ParseWithClaims(tokenInput, &model.Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return JwtKey, nil
+	})
+
+	if claims, ok := token.Claims.(*model.Claims); ok && token.Valid {
+		return claims
+	}
+	return nil
+}

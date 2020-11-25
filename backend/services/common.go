@@ -7,8 +7,6 @@ import (
 var Db *gorm.DB
 
 func OpenDatabase() {
-	//open a db connection
-	//readProperties()
 	var err error
 	Db, err = gorm.Open("postgres", "postgres://"+"admin"+":"+"passw0rd"+"@"+"database"+":"+"5432"+"/"+"apidb"+"?sslmode=disable")
 	if err != nil {
