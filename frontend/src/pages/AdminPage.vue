@@ -1,8 +1,9 @@
 <template>
- <div>
-    <button v-on:click="handlerOnclickZones" >Manage Zones</button>
-    <button v-on:click="handlerOnclickUsers">Manage Users</button>
-    <button v-on:click="handlerOnclickZonesToUsers">Associate Zones</button>
+ <div class="btns">
+    <br>
+    <button v-on:click="handlerOnclickZones" class="btn btn-dark btn-lg btn-block">Manage Zones</button>
+    <button v-on:click="handlerOnclickUsers" class="btn btn-dark btn-lg btn-block">Manage Users</button>
+    <button v-on:click="handlerOnclickZonesToUsers" class="btn btn-dark btn-lg btn-block">Associate Zones</button>
  </div>
 </template>
 
@@ -27,3 +28,10 @@ export default {
   },
 }  
 </script>
+
+<style scoped>
+  .btns{
+    width: 50%;
+    margin: auto;
+  }
+</style>
