@@ -1,19 +1,25 @@
 <template>
  <div>
-    <div class="myBtn">
-      
-      <b-button variant="success" @click="$bvToast.show('toast')">
+   <br>
+    <div class="btns">
+      <button v-on:click="handlerOnclickZones" class="btn btn-dark btn-lg btn-block">Manage Zones</button>
+      <button v-on:click="handlerOnclickUsers" class="btn btn-dark btn-lg btn-block">Manage Users</button>
+      <button v-on:click="handlerOnclickZonesToUsers" class="btn btn-dark btn-lg btn-block">Associate Zones</button>
+    </div>
+    <br>
+    <div class="myBtn2">
+      <b-button variant="danger" @click="$bvToast.show('toast')">
         <h5>Logout</h5>
       </b-button>
-      <b-toast id="toast" title="Logout?" static no-auto-hide>
-        <b-button variant="secondary" @click.prevent="logout">
-          Yes
-        </b-button>
-      </b-toast>
+      <br>
+      <div class="myBtn">
+        <b-toast id="toast"  title="Logout?" static no-auto-hide>
+          <b-button variant="btn btn-dark btn-lg btn-block" @click.prevent="logout">
+            Yes
+          </b-button>
+        </b-toast>
+      </div>
     </div>
-    <button v-on:click="handlerOnclickZones" >Manage Zones</button>
-    <button v-on:click="handlerOnclickUsers">Manage Users</button>
-    <button v-on:click="handlerOnclickZonesToUsers">Associate Zones</button>
  </div>
 </template>
 
@@ -45,7 +51,17 @@ export default {
 
 <style scoped>
   .btns{
-    width: 50%;
+    width: 30%;
+    margin: auto;
+    padding: 2%;
+  }
+  .myBtn{
+    padding: 6%;
+    margin: auto;
+  }
+  .myBtn2{
+    width: 20%;
+    margin: auto;
     margin: auto;
   }
 </style>

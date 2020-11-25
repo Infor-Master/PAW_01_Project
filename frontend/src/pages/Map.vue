@@ -1,9 +1,5 @@
 <template>
  <div>
-     <p>
-    <button v-on:click="handlerOnclickBack">Back</button>
-    <p>
-
    <h1>Coords:</h1>
    <p>Localização atual: {{ coordinates.lat }} Latitude, {{ coordinates.lng }} Longitude</p>
    <p>Localização mapa: {{ mapCoordinates.lat }} Latitude, {{ mapCoordinates.lng }} Longitude</p>
@@ -13,6 +9,7 @@
         style="width:1280px; height:720px; margin: 32px auto;"
         ref="mapRef"
     >
+        <div class="map">
         <gmap-info-window
             :options="infoWindowOptions"
             :position="infoWindowPosition()"
@@ -24,6 +21,7 @@
                 <h5>Participantes: {{ activeZone.PplCount }}/{{ activeZone.Limits }} </h5>
             </div>
         </gmap-info-window>
+        </div>
         <gmap-marker
             v-for="(zone) in zones"
             :key="zone.ID"
@@ -34,6 +32,9 @@
         >
         </gmap-marker>
    </gmap-map>
+    <div class="backBtn">
+        <button v-on:click="handlerOnclickBack" class="btn btn-dark btn-lg btn-block">Back</button>
+    </div>
  </div>
 </template>
 
@@ -129,3 +130,17 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+    .map{
+        margin: auto;
+        width: 50%;
+        padding: 20px;
+    }
+    .backBtn{
+        margin: auto;
+        padding: 2%;
+        width: 30%;
+    }
+</style>

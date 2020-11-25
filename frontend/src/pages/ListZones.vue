@@ -2,15 +2,16 @@
   <div class="myDiv">
     <br>
     <div class="myBtn">
-      
-      <b-button variant="success" @click="$bvToast.show('toast')">
-        {{this.worker_name}}
-      </b-button>
-      <b-toast id="toast" title="Logout?" static no-auto-hide>
-        <b-button variant="secondary" @click.prevent="logout">
-          Yes
+        <b-button variant="success" @click="$bvToast.show('toast')">
+          {{this.worker_name}}
         </b-button>
-      </b-toast>
+      <div class="pad">
+        <b-toast id="toast" title="Logout?" static no-auto-hide>
+          <b-button variant="btn btn-dark btn-lg btn-block" @click.prevent="logout">
+            Yes
+          </b-button>
+        </b-toast>
+      </div>
     </div>
     <br><br><br>
     <b-jumbotron>
@@ -28,16 +29,16 @@
             @click="zoneHandler(zone.ID)">
             {{zone.Name}}
           <b-progress :value="zone.PplCount" variant="dark" animated show-value :max="zone.Limits" class="mb-3"></b-progress>
-          <h6>Max: {{zone.Limits}} People</h6>
+          <h6 class="font-weight-bold">Max: {{zone.Limits}} People</h6>
         </b-list-group-item>
-          
       </b-list-group>
-        
       </template>
     </b-jumbotron>
-    <b-button variant="success" @click.prevent="map">
-      Map
-    </b-button>
+    <div class="mapBtn">
+      <b-button variant="btn btn-dark btn-lg btn-block" @click.prevent="map">
+        Map
+      </b-button>
+    </div>
   </div>
 </template>
 
@@ -107,7 +108,7 @@ export default {
     margin-bottom: 15px;
   }
   .list-group-item:hover {
-    background: #EEE;
+    background: rgb(162, 211, 168);
     cursor: pointer;
   }
   .myBtn{
@@ -116,10 +117,18 @@ export default {
     width: 38%;
     height: 40%;
     margin: auto;
+    padding: auto;
   }
   .myDiv{
-    width: 70%;
+    width: 60%;
     align-content: center;
+    margin: auto;
+  }
+  .pad{
+    padding: 5%;
+  }
+  .mapBtn{
+    width: 30%;
     margin: auto;
   }
 </style>

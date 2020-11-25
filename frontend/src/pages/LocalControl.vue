@@ -1,21 +1,36 @@
 <template>
     <div>
-    <button v-on:click="handlerOnclickBack">Back</button>
+      <br>
       <b-container>
+
         <b-row >
           <b-col>
             <b-jumbotron>
-              <template #header>{{zone.Name}}</template>
-              <template #lead>{{jwtDecoded.name}}</template>
-              <h1> Number of people: {{zone.PplCount}} </h1>
-              <b-button @click="addPerson" class="button" size=lg variant="success">Add Person</b-button>
-              <p></p>
-              <b-button @click="removePerson" class="button" size=lg variant="danger">Remove Person</b-button>
+              <!--<template #header>{{zone.Name}}</template>
+              <template #lead>{{jwtDecoded.name}}</template>-->
+              <b-list-group>
+                <div class="item">
+                  <b-list-group-item>
+                    <h3 class="font-weight-bold">{{zone.Name}}</h3>
+                    <b-progress :value="zone.PplCount" variant="dark" animated show-value :max="zone.Limits" class="mb-3"></b-progress>
+                    <h6 class="font-weight-bold">Max: {{zone.Limits}} People</h6>
+                  </b-list-group-item>
+                </div>
+              </b-list-group>
+              <div class="btn">
+                <b-button @click="addPerson" class="button" size=lg variant="success">Add Person</b-button>
+              </div>
+              <div class="btn2">
+                <b-button @click="removePerson" class="button" size=lg variant="danger">Remove Person</b-button>
+              </div>
               <!--<VueTable />-->
             </b-jumbotron>
           </b-col>
         </b-row>
       </b-container>
+      <div class="backBtn">
+        <button v-on:click="handlerOnclickBack" class="btn btn-dark btn-lg btn-block">Back</button>
+      </div>
   </div>
 </template>
 
@@ -103,3 +118,25 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+  .backBtn{
+    margin: auto;
+    padding: 2%;
+    width: 30%;
+  }
+  .item{
+    padding: 1%;
+  }
+  .btn{
+    padding: 1%;
+    width: 55%;
+    margin: auto;
+  }
+  .btn2{
+    padding: 1%;
+    width: 55%;
+    margin: auto;
+  }
+</style>
