@@ -38,9 +38,7 @@ func GetWorkerZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zones})
 }
 
-func GetZone(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
+func GetZone(c *gin.Context) { 
 
 	zone := services.FindZone(c)
 
