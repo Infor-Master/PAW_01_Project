@@ -39,8 +39,6 @@ func GetWorkerZones(c *gin.Context) {
 }
 
 func GetZone(c *gin.Context) {
-	
-	zone := services.FindZone(c) 
 
 	zone := services.FindZone(c)
 
@@ -85,7 +83,7 @@ func AddPerson(c *gin.Context) {
 
 	zone := services.FindZone(c)
 
-	if zone.PplCount <= zone.Limits {
+	if zone.PplCount < zone.Limits {
 		zone.PplCount++
 
 		services.Db.Save(&zone)

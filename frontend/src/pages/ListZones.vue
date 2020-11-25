@@ -27,7 +27,7 @@
             :key="index"
             @click="zoneHandler(zone.ID)">
             {{zone.Name}}
-          <b-progress :value="zone.PplCount" variant="dark" show-progress animated show-value :max="zone.Limits" class="mb-3"></b-progress>
+          <b-progress :value="zone.PplCount" variant="dark" animated show-value :max="zone.Limits" class="mb-3"></b-progress>
           <h6>Max: {{zone.Limits}} People</h6>
         </b-list-group-item>
           
@@ -97,6 +97,7 @@ export default {
   },
   mounted() {
       this.getWorkerZones();
+      console.log(this.zones)
   }
 }
 </script>
