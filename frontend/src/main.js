@@ -16,6 +16,7 @@ import LocalControl from './pages/LocalControl.vue'
 import AddRemoveZone from './pages/AddRemoveZone.vue'
 import AdminPage from './pages/AdminPage.vue'
 import VueJwtDecode from 'vue-jwt-decode'
+import Association from './pages/Association.vue'
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -141,7 +142,7 @@ const router = new VueRouter({
     {
       path: '/admin/zonestousers',
       name: 'zonestousers',
-      component: AddRemoveZone,                 //ALTERAR PARA A CORRETA
+      component: Association,
       beforeEnter: (to, from, next) => {
         if (localStorage.getItem('jwt') === null){
           next({ name: 'login' })
