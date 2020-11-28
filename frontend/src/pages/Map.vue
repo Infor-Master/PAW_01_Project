@@ -44,6 +44,7 @@ import settings from '../settings'
 export default {
   data() {
     return {
+        connection: null,
         map : null,
         zones: [],
         activeZone: {},
@@ -61,7 +62,20 @@ export default {
     };
   },
   created() {
-      // get current coords from browser
+    //Get connection to Websocket Server
+    this.connection = new WebSocket(settings.socketURL)
+
+    this.connection.onmessage = function(event) {
+        console.log(event);
+    }
+
+    this.connection.onopen = (event => {
+        console.log(event)
+        console.log("Successfully connected to the websocket server...")
+        this.connection.send('Hello');
+    })
+
+    // get current coords from browser
     this.$getLocation({})
         .then(coordinates => {
             this.coordinates = coordinates
