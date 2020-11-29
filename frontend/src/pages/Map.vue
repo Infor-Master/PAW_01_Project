@@ -44,7 +44,8 @@ import settings from '../settings'
 export default {
   data() {
     return {
-        connection: null,
+        ws: null,
+        event: '',
         map : null,
         zones: [],
         activeZone: {},
@@ -61,20 +62,11 @@ export default {
         }
     };
   },
+  mounted(){
+      this.loadZones();
+      this.$refs.mapRef.$mapPromise.then(map => this.map = map);
+  },
   created() {
-    //Get connection to Websocket Server
-    this.connection = new WebSocket(settings.socketURL)
-
-    this.connection.onmessage = function(event) {
-        console.log(event);
-    }
-
-    this.connection.onopen = (event => {
-        console.log(event)
-        console.log("Successfully connected to the websocket server...")
-        this.connection.send('Hello');
-    })
-
     // get current coords from browser
     this.$getLocation({})
         .then(coordinates => {
@@ -82,26 +74,23 @@ export default {
         }).catch(error => {
             alert(error)
         })
-    
-    this.axios({
-        method: 'get',
-        url: '/zones/worker',
-        baseURL: settings.baseURL,
-        headers:{
-            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-        }
-    }).then((response) =>{
-            for(var i in response.data.data){
-                this.zones.push(response.data.data[i])
-            }
-    }).catch(error => {
-        if(error.response){
-            console.error(error.response);
-        }
+
+    this.ws = new WebSocket(settings.socketURL)
+    this.ws.onmessage = (event => {
+      this.event = event;
     });
+    this.ws.onopen = (event => {
+        console.log(event)
+        console.log("Successfully connected to the websocket server...")
+    })
   },
-  mounted(){
-      this.$refs.mapRef.$mapPromise.then(map => this.map = map);
+  watch: {
+    event: function (newEvent) {
+      if(newEvent.data === 'getZone'){
+        this.loadZones();  //buscar zonas atualizadas do worker
+        this.event = '';  //reset ao evento
+      }
+    }
   },
   computed: {
       mapCoordinates() {
@@ -118,29 +107,48 @@ export default {
       }
   },
   methods: {
-      handlerOnclickBack(){
-     this.$router.go(-1)
-   },
-      getPosition(zone) {
-          return {
-              lat: parseFloat(zone.Latitude),
-              lng: parseFloat(zone.Longitude)
-          }
-      },
-      infoWindowPosition(){
-          return {
-              lat: parseFloat(this.activeZone.Latitude),
-              lng: parseFloat(this.activeZone.Longitude)
-          }
-      },
-      handleMarkerClicked(zone){
-          this.activeZone = zone;
-          this.infoWindowOpened = true
-      },
-      handleInfoWindowClose(){
-          this.activeZone = {};
-          this.infoWindowOpened = false
-      }
+    loadZones(){
+        this.axios({
+            method: 'get',
+            url: '/zones/worker',
+            baseURL: settings.baseURL,
+            headers:{
+                'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+            }
+        }).then((response) =>{
+            this.zones = [];
+            for(var i in response.data.data){
+                this.zones.push(response.data.data[i])
+            }
+        }).catch(error => {
+            if(error.response){
+                console.error(error.response);
+            }
+        });
+    },
+    handlerOnclickBack(){
+        this.$router.go(-1)
+    },
+    getPosition(zone) {
+        return {
+            lat: parseFloat(zone.Latitude),
+            lng: parseFloat(zone.Longitude)
+        }
+    },
+    infoWindowPosition(){
+        return {
+            lat: parseFloat(this.activeZone.Latitude),
+            lng: parseFloat(this.activeZone.Longitude)
+        }
+    },
+    handleMarkerClicked(zone){
+        this.activeZone = zone;
+        this.infoWindowOpened = true
+    },
+    handleInfoWindowClose(){
+        this.activeZone = {};
+        this.infoWindowOpened = false
+    }
   }
 }
 </script>

@@ -6,7 +6,17 @@ const wsServer = new ws.Server({ noServer: true });
 wsServer.on('connection', socket => {
   console.log('got connection')
   socket.on('message', (msg) => {
-    console.log('got message: ', msg);
+    //console.log('got message: ', msg);
+    switch(msg) {
+      case 'updZone':
+        wsServer.clients.forEach(function(client){
+          console.log('client!')
+          client.send('getZone')
+        });
+        break;
+      default:
+        console.log('defaulted: '+msg)
+    }
   });
 })
 

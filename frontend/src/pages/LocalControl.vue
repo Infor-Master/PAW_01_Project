@@ -48,6 +48,8 @@ export default {
   },
   data(){
     return{
+      ws: null,
+      event: '',
       zone: {},
       jwtDecoded: {},
     }
@@ -85,6 +87,7 @@ export default {
         }
       }).then((response) =>{
           console.log(response)
+          this.ws.send('updZone') //manda aviso para atualizar
       }).catch(error => {
           if(error.response){
             console.error(error.response);
@@ -102,6 +105,7 @@ export default {
         }
       }).then((response) =>{
           console.log(response)
+          this.ws.send('updZone') //manda aviso para atualizar
       }).catch(error => {
           if(error.response){
             console.error(error.response);
@@ -115,6 +119,24 @@ export default {
   },
   mounted() {
     this.loadPage()
+  },
+  created() {
+    this.ws = new WebSocket(settings.socketURL)
+    this.ws.onmessage = (event => {
+      this.event = event;
+    });
+    this.ws.onopen = (event => {
+        console.log(event)
+        console.log("Successfully connected to the websocket server...")
+    })
+  },
+  watch: {
+    event: function (newEvent) {
+      if(newEvent.data === 'getZone'){
+        this.loadPage();  //buscar zona atualizada
+        this.event = '';  //reset ao evento
+      }
+    }
   }
 }
 </script>
