@@ -49,6 +49,8 @@ import VueJwtDecode from 'vue-jwt-decode'
 export default {
   data(){
     return{
+      ws: null,
+      event: '',
       zones: [],
       message: this.message,
       jwtDecoded: {},
@@ -80,6 +82,7 @@ export default {
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           }
           }).then((response) =>{
+            this.zones = [];
               for(var i in response.data){
                 this.zones.push(response.data[i])
               }
@@ -99,6 +102,24 @@ export default {
   mounted() {
       this.getWorkerZones();
       console.log(this.zones)
+  },
+  created() {
+    this.ws = new WebSocket(settings.socketURL)
+    this.ws.onmessage = (event => {
+      this.event = event;
+    });
+    this.ws.onopen = (event => {
+        console.log(event)
+        console.log("Successfully connected to the websocket server...")
+    })
+  },
+  watch: {
+    event: function (newEvent) {
+      if(newEvent.data === 'getZone'){
+        this.getWorkerZones();  //buscar zonas do worker atualizadas
+        this.event = '';  //reset ao evento
+      }
+    }
   }
 }
 </script>

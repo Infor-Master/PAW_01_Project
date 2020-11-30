@@ -40,6 +40,7 @@ services:
     restart: unless-stopped
     depends_on:
         - backend
+        - sockets
     build:
         context: './frontend'
         dockerfile: 'Dockerfile'
@@ -50,6 +51,23 @@ services:
         - CHOKIDAR_USEPOLLING=true
     networks:
         - frontend_network
+
+  sockets:
+    container_name: 'Projecto_PAW_sockets'
+    restart: unless-stopped
+    depends_on:
+      - database
+    build: 
+      context: './sockets'
+      dockerfile: 'Dockerfile'
+    volumes:
+      - ./sockets:/app
+      - /app/node_modules
+    networks: 
+      - backend_network
+      - frontend_network
+    links: 
+       - database
 
   proxy:
     container_name: 'Projecto_PAW_proxy'
