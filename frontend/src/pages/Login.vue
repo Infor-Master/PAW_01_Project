@@ -77,7 +77,7 @@ export default {
 
 <style>
 .bCard{
-  width: 50%;
+  width: 25%;
   margin: auto;
 }
 html, 

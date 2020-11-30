@@ -1,26 +1,267 @@
 definitions:
   model.Claims:
     properties:
+      admin:
+        type: boolean
+      id:
+        type: integer
+      name:
+        type: string
       username:
         type: string
     type: object
-  model.Evaluation:
+  model.Worker:
     properties:
-      Note:
+      admin:
+        type: boolean
+      name:
         type: string
-      Rating:
-        type: integer
-    type: object
-  model.Users:
-    properties:
       password:
         type: string
       username:
         type: string
+      zones:
+        items:
+          $ref: '#/definitions/model.Zone'
+        type: array
+    type: object
+  model.Zone:
+    properties:
+      latitude:
+        type: number
+      limits:
+        type: integer
+      longitude:
+        type: number
+      name:
+        type: string
+      pplCount:
+        type: integer
+      workers:
+        items:
+          $ref: '#/definitions/model.Worker'
+        type: array
     type: object
 info:
   contact: {}
 paths:
+  /admin/association:
+    get:
+      consumes:
+      - application/json
+      description: Desassocia workers a zonas vis IDs
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Worker'
+            type: array
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Desassocia workers a zonas
+  /admin/users:
+    delete:
+      consumes:
+      - application/json
+      description: Exclui uma zona realizada
+      operationId: get-string-by-int
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Worker ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Worker'
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Exclui uma worker pelo ID
+    get:
+      consumes:
+      - application/json
+      description: Exibe a lista, sem todos os campos, de todas as zonas
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Worker'
+            type: array
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Recupera os users
+    post:
+      consumes:
+      - application/json
+      description: Adiciona um worker na base de dados
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Add worker
+        in: body
+        name: worker
+        required: true
+        schema:
+          $ref: '#/definitions/model.Worker'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Worker'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Adiciona um Worker
+  /admin/zones:
+    get:
+      consumes:
+      - application/json
+      description: Exibe a lista, sem todos os campos, de todas as zonas
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Zone'
+            type: array
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Recupera as zonas
+    post:
+      consumes:
+      - application/json
+      description: Cria uma avaliação sobre a utilização da aplicação
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Add zone
+        in: body
+        name: zone
+        required: true
+        schema:
+          $ref: '#/definitions/model.Zone'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Zone'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Adicionar uma zona
+  /admin/zones/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Exclui uma zona realizada
+      operationId: get-string-by-int
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Zone ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Zone'
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Exclui uma zona pelo ID
+  /api/admin/association:
+    post:
+      consumes:
+      - application/json
+      description: Associa workers a zonas via IDs
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Not Found
+        "404":
+          description: Not Found
+      security:
+      - BearerAuth: []
+      summary: Associa workers a zonas
   /auth/login:
     post:
       consumes:
@@ -32,7 +273,7 @@ paths:
         name: evaluation
         required: true
         schema:
-          $ref: '#/definitions/model.Users'
+          $ref: '#/definitions/model.Worker'
       produces:
       - application/json
       responses:
@@ -68,192 +309,4 @@ paths:
         "401":
           description: Unauthorized
       summary: Atualiza token de autenticação
-  /auth/register:
-    post:
-      consumes:
-      - application/json
-      description: Regista um utilizador
-      parameters:
-      - description: Do register
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.Users'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Claims'
-        "400":
-          description: Bad request
-        "401":
-          description: Unauthorized
-      summary: Realizar registro
-  /echo:
-    get:
-      consumes:
-      - application/json
-      description: Echo the data sent though the get request.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.Evaluation'
-            type: array
-        "404":
-          description: Not found
-      summary: Echo the data sent on get
-  /evaluation:
-    get:
-      consumes:
-      - application/json
-      description: Exibe a lista, sem todos os campos, de todas as avaliações
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/model.Evaluation'
-            type: array
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Recupera as avaliações
-    post:
-      consumes:
-      - application/json
-      description: Cria uma avaliação sobre a utilização da aplicação
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Add evaluation
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.Evaluation'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "400":
-          description: Bad request
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Adicionar uma avaliação
-  /evaluation/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Exclui uma avaliação realizada
-      operationId: get-string-by-int
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Evaluation ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Exclui uma avaliação pelo ID
-    get:
-      consumes:
-      - application/json
-      description: Exibe os detalhes de uma avaliação pelo ID
-      operationId: get-evaluation-by-int
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Evaluation ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Recupera uma avaliação pelo id
-    put:
-      consumes:
-      - application/json
-      description: Atualiza uma avaliação sobre a utilização da aplicação
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Udpdate evaluation
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.Evaluation'
-      - description: Evaluation ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Evaluation'
-        "400":
-          description: Bad request
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Atualiza uma avaliação
 swagger: "2.0"

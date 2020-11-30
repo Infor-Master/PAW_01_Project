@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"projetoapi/model"
 	"projetoapi/services"
-
+	"strconv"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,9 +40,9 @@ func GetWorkerZones(c *gin.Context) {
 
 func GetZone(c *gin.Context) {
 
-	zone := services.FindZone(c)
+	zone := FindZone(c)
 
-	if services.WorkerHasAccessToZone(c, zone) {
+	if WorkerHasAccessToZone(c, zone) {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": zone})
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "Access Denied!"})
@@ -81,7 +81,7 @@ func DeleteZone(c *gin.Context) {
 
 func AddPerson(c *gin.Context) {
 
-	zone := services.FindZone(c)
+	zone := FindZone(c)
 
 	if zone.PplCount < zone.Limits {
 		zone.PplCount++
@@ -98,7 +98,7 @@ func AddPerson(c *gin.Context) {
 
 func RemovePerson(c *gin.Context) {
 
-	zone := services.FindZone(c)
+	zone := FindZone(c)
 
 	if zone.PplCount > 0 {
 		zone.PplCount--
@@ -111,4 +111,26 @@ func RemovePerson(c *gin.Context) {
 
 	c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Can't remove people if count is 0!"})
 
+}
+
+func FindZone(c *gin.Context) *model.Zone{
+	var zone model.Zone
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Invalid parameters!"})
+		return nil
+	}
+
+	uintID := uint(id)
+
+	services.Db.Where("id = ?", uintID).First(&zone)
+
+	if zone.ID != uintID {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Didn't find this zone!"})
+		return nil
+	}
+	
+	return &zone
 }
