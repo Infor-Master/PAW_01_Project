@@ -18,7 +18,7 @@ func init() {
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
 	
-	var admin model.Worker
+	/*var admin model.Worker
 	admin.Username = "Admin"
 	admin.Name = "Test Admin Account"
 	admin.Password = "admin123"
@@ -30,7 +30,7 @@ func init() {
 	user.Name = "Test User Account"
 	user.Password = "user123"
 	user.Admin = false
-	services.Db.Create(&user)
+	services.Db.Create(&user)*/
 	
 	defer services.Db.Close()
 }
