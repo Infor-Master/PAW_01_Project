@@ -1,53 +1,64 @@
 <template>
-  <div>
-    <h1>Coords:</h1>
-    <p>
-      Localização atual: {{ coordinates.lat }} Latitude,
-      {{ coordinates.lng }} Longitude
-    </p>
-    <p>
-      Localização mapa: {{ mapCoordinates.lat }} Latitude,
-      {{ mapCoordinates.lng }} Longitude
-    </p>
-    <gmap-map
-      :center="{ lat: coordinates.lat, lng: coordinates.lng }"
-      :zoom="7"
-      style="width: 1280px; height: 720px; margin: 32px auto"
-      ref="mapRef"
-    >
-      <div class="map">
-        <gmap-info-window
-          :options="infoWindowOptions"
-          :position="infoWindowPosition()"
-          :opened="infoWindowOpened"
-          @closeclick="handleInfoWindowClose()"
+  <div class="myDiv">
+    <br>
+    <b-jumbotron bg-variant="dark" text-variant="light" border-variant="success">
+      <template slot="lead">
+        <h3><b> Coordinates </b></h3>
+        <hr>
+        <br>
+        <h5>
+          <i><b style="color:powderblue;">Localização atual:</b></i> 
+          {{ coordinates.lat.toFixed(3) }} <b style="color:lightgreen;">Latitude</b>,
+          {{ coordinates.lng.toFixed(3) }} <b style="color:lightgreen;">Longitude</b>
+        </h5>
+        <h5>
+          <i><b style="color:powderblue;">Localização mapa: </b></i>
+            {{ mapCoordinates.lat.toFixed(3) }} <b style="color:lightgreen;">Latitude</b>,
+          {{ mapCoordinates.lng.toFixed(3) }} <b style="color:lightgreen;">Longitude</b>
+        </h5>
+        <gmap-map
+          :center="{ lat: coordinates.lat, lng: coordinates.lng }"
+          :zoom="7"
+          style="width: auto; height: 720px; margin: 32px auto"
+          ref="mapRef"
         >
-          <div>
-            <h2>{{ activeZone.Name }}</h2>
-            <h5>
-              Participantes: {{ activeZone.PplCount }}/{{ activeZone.Limits }}
-            </h5>
+
+          <div class="map">
+            <gmap-info-window
+              :options="infoWindowOptions"
+              :position="infoWindowPosition()"
+              :opened="infoWindowOpened"
+              @closeclick="handleInfoWindowClose()"
+            >
+              <div>
+                <h2>{{ activeZone.Name }}</h2>
+                <h5>
+                  Participantes: {{ activeZone.PplCount }}/{{ activeZone.Limits }}
+                </h5>
+              </div>
+            </gmap-info-window>
           </div>
-        </gmap-info-window>
-      </div>
-      <gmap-marker
-        v-for="zone in zones"
-        :key="zone.ID"
-        :position="getPosition(zone)"
-        :clickable="true"
-        :draggable="false"
-        @click="handleMarkerClicked(zone)"
-      >
-      </gmap-marker>
-    </gmap-map>
-    <div class="backBtn">
-      <button
-        v-on:click="handlerOnclickBack"
-        class="btn btn-dark btn-lg btn-block"
-      >
-        Back
-      </button>
-    </div>
+          <gmap-marker
+            v-for="zone in zones"
+            :key="zone.ID"
+            :position="getPosition(zone)"
+            :clickable="true"
+            :draggable="false"
+            @click="handleMarkerClicked(zone)"
+          >
+          </gmap-marker>
+        </gmap-map>
+        <div class="backBtn">
+          <b-button
+            v-on:click="handlerOnclickBack"
+            class="btn btn-dark btn-lg btn-block"
+            variant="outline-success"
+          >
+            Back
+          </b-button>
+        </div>
+      </template>
+    </b-jumbotron>
   </div>
 </template>
 
@@ -170,14 +181,25 @@ export default {
 </script>
 
 <style scoped>
-.map {
-  margin: auto;
-  width: 50%;
-  padding: 20px;
-}
-.backBtn {
-  margin: auto;
-  padding: 2%;
-  width: 30%;
-}
+  .map {
+    margin: auto;
+    width: 50%;
+    padding: 20px;
+  }
+  .backBtn {
+    margin: auto;
+    padding: 2%;
+    width: 30%;
+  }
+  .myDiv{
+    width: 60%;
+    align-content: center;
+    margin: auto;
+  }
+  hr { 
+    display: block; height: 2px;
+    border: 0; border-top: 2px solid rgb(27, 180, 52);
+    margin: 1em 0; padding: 0; 
+  }
+
 </style>

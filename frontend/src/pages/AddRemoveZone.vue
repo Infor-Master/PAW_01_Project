@@ -1,10 +1,7 @@
 <template>
   <div>
     <h1>Manage Zones</h1>
-    <p>
-      <button v-on:click="handlerOnclickBack">Back</button>
-    </p>
-    <p></p>
+    
     <form class="addZone" @submit.prevent="handlerSubmitAdd">
       <hr />
       <li v-for="zone in this.zones" :key="zone.ID">
@@ -83,6 +80,10 @@
       <button type="submit">Add</button>
       {{ this.message }}
     </form>
+    <div class="backBtn">
+        <button v-on:click="handlerOnclickBack" 
+        class="btn btn-dark btn-lg btn-block">Back</button>
+      </div>
   </div>
 </template>
 
@@ -291,3 +292,17 @@ export default {
   }
 };
 </script>
+
+
+<style scoped>
+  .map {
+    margin: auto;
+    width: 50%;
+    padding: 20px;
+  }
+  .backBtn {
+    margin: auto;
+    padding: 2%;
+    width: 30%;
+  }
+</style>
