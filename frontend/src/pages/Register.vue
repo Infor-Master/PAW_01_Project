@@ -1,36 +1,51 @@
 <template>
- <div>
-   <p>
-    <button v-on:click="handlerOnclickBack">Back</button>
-    <p>
-   <form 
-    class="register"
-    @submit.prevent="handlerSubmit">
-     <h1>Sign up</h1>
-     <label>Username</label>
-     <input required v-model="username" type="text" placeholder="Username"/>
-     <hr/>
-     <label>Name</label>
-     <input required v-model="name" type="text" placeholder="Name"/>
-     <hr/>
-     <label>Password</label>
-     <input required v-model="password" type="password" placeholder="Password"/>
-     <hr/>
-     <input type="checkbox" id="isAdmin" v-model="isAdmin">
-     <label for="checkbox">Admin</label>
-     <p>
-     <button type="submit">Sign up</button>
-     <p>{{message}}</p>
-     </form>
+ <div class="myDiv">
+   <br>
+   <b-jumbotron bg-variant="dark" text-variant="light" border-variant="success">
+      <template slot="lead">
+        <form 
+          class="register"
+          @submit.prevent="handlerSubmit">
+          <h3><b>Sign up</b></h3>
+          <hr>
+          <h5>Username</h5>
+          <input required v-model="username" type="text" placeholder="Username"/>
+          <br><br>
+          <h5>Name</h5>
+          <input required v-model="name" type="text" placeholder="Name"/>
+          <br><br>
+          <h5>Password</h5>
+          <input required v-model="password" type="password" placeholder="Password"/>
+          <br><br>
+          <h5 for="checkbox">Admin</h5>
+          <input type="checkbox" id="isAdmin" style="height:25px;width:25px;" v-model="isAdmin">
+          <br><br>
+          <div class="btn2">
+            <b-button type="submit" class="btn btn-dark btn-lg btn-block"
+              variant="outline-primary">Sign up</b-button>
+          </div>
+          {{message}}
+          <br><br>
+        </form>
+        <hr>
+        <form 
+          class="RemoveUser" @submit.prevent="handlerSubmitRemove()">
 
-     <form 
-        class="RemoveUser" @submit.prevent="handlerSubmitRemove()">
-
-        <b-form-select v-model="selected" :plain="true" :options="this.userOptions" />
-
-        <button type="submit">Remove</button>
-
-   </form>
+          <b-form-select v-model="selected" :plain="true" style="width:33%;margin:auto;" :options="this.userOptions" />
+          <br>
+          <div class="btn2">
+            <b-button type="submit" class="btn btn-dark btn-lg btn-block"
+        variant="outline-danger">Remove</b-button>
+          </div>
+        </form>
+      </template>
+   </b-jumbotron>
+   <br>
+   <div class="btn2">
+    <b-button v-on:click="handlerOnclickBack"
+      class="btn btn-dark btn-lg btn-block"
+        variant="outline-success">Back</b-button>
+   </div>
  </div>
 </template>
 
@@ -147,3 +162,22 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+  .btn2 {
+    margin: auto;
+    padding: 2%;
+    width: 30%;
+  }
+  .myDiv{
+    width: 60%;
+    align-content: center;
+    margin: auto;
+  }
+  hr { 
+    display: block; height: 2px;
+    border: 0; border-top: 2px solid rgb(27, 180, 52);
+    margin: 1em 0; padding: 0; 
+  }
+</style>

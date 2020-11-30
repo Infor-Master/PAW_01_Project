@@ -1,89 +1,103 @@
 <template>
-  <div>
-    <h1>Manage Zones</h1>
-    
-    <form class="addZone" @submit.prevent="handlerSubmitAdd">
-      <hr />
-      <li v-for="zone in this.zones" :key="zone.ID">
-        ID: {{ zone.ID }}, Name: {{ zone.Name }}, Lat: {{ zone.Latitude }}, Lng:
-        {{ zone.Longitude }}
-      </li>
-      <hr />
+  <div class="myDiv">
+    <b-jumbotron bg-variant="dark" text-variant="light" border-variant="success">
+      <template slot="lead">
+        <h3><b>Manage Zones</b></h3>
+        <form class="addZone" @submit.prevent="handlerSubmitAdd">
+          <hr />
+          <h5 v-for="zone in this.zones" :key="zone.ID">
+            <b style="color:powderblue;">ID:</b> {{ zone.ID }}, 
+            <b style="color:powderblue;">Name:</b>
+             {{ zone.Name}}, <b style="color:powderblue;">Lat:</b> {{ zone.Latitude.toFixed(3) }}, 
+             <b style="color:powderblue;">Lng:</b>
+            {{ zone.Longitude.toFixed(3) }}
+          </h5>
 
-      <p>
-        Localização mapa: {{ mapCoordinates.lat }} Latitude,
-        {{ mapCoordinates.lng }} Longitude
-      </p>
-      <gmap-map
-        :center="{ lat: coordinates.lat, lng: coordinates.lng }"
-        :zoom="7"
-        style="width: 1280px; height: 720px; margin: 32px auto"
-        ref="mapRef"
-      >
-        <div class="map">
-          <gmap-info-window
-            :options="infoWindowOptions"
-            :position="infoWindowPosition()"
-            :opened="infoWindowOpened"
-            @closeclick="handleInfoWindowClose()"
+          <h5>
+            <b style="color:powderblue;">Localização mapa:</b> {{ mapCoordinates.lat.toFixed(3) }} 
+            <b style="color:lightgreen;">Latitude</b>,
+            {{ mapCoordinates.lng.toFixed(3) }} <b style="color:lightgreen;">Longitude</b>
+          </h5>
+          <gmap-map
+            :center="{ lat: coordinates.lat, lng: coordinates.lng }"
+            :zoom="7"
+            style="width: auto; height: 720px; margin: 32px auto"
+            ref="mapRef"
           >
-            <div>
-              <h2>{{ activeZone.Name }}</h2>
-              <h5>
-                Participantes: {{ activeZone.PplCount }}/{{ activeZone.Limits }}
-              </h5>
-              <form
-                class="RemoveZone"
-                @submit.prevent="handlerSubmitRemove()"
+            <div class="map">
+              <gmap-info-window
+                :options="infoWindowOptions"
+                :position="infoWindowPosition()"
+                :opened="infoWindowOpened"
+                @closeclick="handleInfoWindowClose()"
               >
-                <button type="submit">Remove</button>
-              </form>
+                <div>
+                  <h4 style="color:black;"><b>{{ activeZone.Name }}</b></h4>
+                  <h5 style="color:black;">
+                    <b>Participantes:</b> {{ activeZone.PplCount }}/{{ activeZone.Limits }}
+                  </h5>
+                  <form
+                    class="RemoveZone"
+                    @submit.prevent="handlerSubmitRemove()"
+                  >
+                    <b-button type="submit" class="btn btn-dark btn-lg btn-block"
+                    variant="outline-success" style="width:auto;margin:auto;">Remove
+          </b-button>
+                  </form>
+                </div>
+              </gmap-info-window>
             </div>
-          </gmap-info-window>
-        </div>
-        <gmap-marker
-          v-for="zone in zones"
-          :key="zone.ID"
-          :position="getPosition(zone)"
-          :clickable="true"
-          :draggable="false"
-          @click="handleMarkerClicked(zone)"
-        >
-        </gmap-marker>
-      </gmap-map>
+            <gmap-marker
+              v-for="zone in zones"
+              :key="zone.ID"
+              :position="getPosition(zone)"
+              :clickable="true"
+              :draggable="false"
+              @click="handleMarkerClicked(zone)"
+            >
+            </gmap-marker>
+          </gmap-map>
+          <div>
+            <h5>Name</h5>
+            <input required v-model="name" type="text" placeholder="Name" />
+            <br><br>
 
-      <label>Name</label>
-      <input required v-model="name" type="text" placeholder="Name" />
-      <p />
-
-      <label>Latitude</label>
-      <input
-        required
-        v-model="mapCoordinates.lat"
-        type="number"
-        step="0.00000000000000001"
-        placeholder="Latitude"
-      />
-      <p />
-      <label>Longitude</label>
-      <input
-        required
-        v-model="mapCoordinates.lng"
-        type="number"
-        step="0.00000000000000001"
-        placeholder="Longitude"
-      />
-      <p />
-      <label>Limit</label>
-      <input required v-model="limits" type="number" placeholder="Limit" />
-      <p />
-      <button type="submit">Add</button>
-      {{ this.message }}
-    </form>
-    <div class="backBtn">
-        <button v-on:click="handlerOnclickBack" 
-        class="btn btn-dark btn-lg btn-block">Back</button>
-      </div>
+            <h5>Latitude</h5>
+            <input
+              required
+              v-model="mapCoordinates.lat"
+              type="number"
+              step="0.00000000000000001"
+              placeholder="Latitude"
+            />
+            <br><br>
+            <h5>Longitude</h5>
+            <input
+              required
+              v-model="mapCoordinates.lng"
+              type="number"
+              step="0.00000000000000001"
+              placeholder="Longitude"
+            />
+            <br><br>
+            <h5>Limit</h5>
+            <input required v-model="limits" type="number" placeholder="Limit" />
+            <br>
+          </div>
+          <br>
+          <b-button type="submit" class="btn btn-dark btn-lg btn-block"
+              variant="outline-primary" style="width:20%;margin:auto;">Add
+          </b-button>
+          <br>
+          {{ this.message }}
+        </form>
+      </template>
+      <div class="backBtn">
+      <b-button v-on:click="handlerOnclickBack" 
+      class="btn btn-dark btn-lg btn-block"
+      variant="outline-success">Back</b-button>
+    </div>
+    </b-jumbotron>
   </div>
 </template>
 
@@ -304,5 +318,15 @@ export default {
     margin: auto;
     padding: 2%;
     width: 30%;
+  }
+  .myDiv{
+    width: 60%;
+    align-content: center;
+    margin: auto;
+  }
+  hr { 
+    display: block; height: 2px;
+    border: 0; border-top: 2px solid rgb(27, 180, 52);
+    margin: 1em 0; padding: 0; 
   }
 </style>
