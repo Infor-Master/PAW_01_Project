@@ -30,6 +30,8 @@ import VueJwtDecode from 'vue-jwt-decode'
   name: 'association',
   data(){
     return {
+      ws: null,
+      event: '',
       zones: [],
       selectedZone: '',
       selectedWorker: '',
@@ -43,7 +45,6 @@ import VueJwtDecode from 'vue-jwt-decode'
       this.$router.go(-1)
     },
     handlerSubmitAssociate(){
-
         this.message = "";
         this.axios({
         method: 'post',
@@ -58,8 +59,8 @@ import VueJwtDecode from 'vue-jwt-decode'
       })
       .then(response => {
         console.log(response)
-
         this.message = " Registado!"
+        this.ws.send('updZone') //manda aviso para atualizar
         this.getAllZones();
       })
       .catch(error => {
@@ -71,7 +72,6 @@ import VueJwtDecode from 'vue-jwt-decode'
 
     },
     handlerRemoveAssociate(){
-
         this.message = "";
         this.axios({
         method: 'delete',
@@ -88,6 +88,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         console.log(response)
 
         this.message = " Registado!"
+        this.ws.send('updZone') //manda aviso para atualizar
         this.getAllZones();
       })
       .catch(error => {
@@ -119,8 +120,8 @@ import VueJwtDecode from 'vue-jwt-decode'
             })
 
           this.zones.push({
-            "name": this.aux[j]["Name"],
-            "id": this.aux[j]["ID"]
+            "id": this.aux[j]["ID"],
+            "name": this.aux[j]["Name"]
           })
         }
       })
@@ -132,7 +133,7 @@ import VueJwtDecode from 'vue-jwt-decode'
       })
    },
    getWorkers(){
-       this.message = "";
+      this.message = "";
       this.axios({
         method: 'get',
         url: 'admin/users',
@@ -156,8 +157,7 @@ import VueJwtDecode from 'vue-jwt-decode'
                 value: this.aux[j]["ID"],
                 text: this.aux[j]["Name"],
             })
-        }
-         
+          }
         }
       })
       .catch(error => {
@@ -168,10 +168,25 @@ import VueJwtDecode from 'vue-jwt-decode'
       })
    }
   },
-   mounted: function(){
-      this.getZones()
-      this.getWorkers()
-    },
+  mounted(){
+    this.getZones()
+    this.getWorkers()
+  },
+  created() {
+    this.ws = new WebSocket(settings.socketURL)
+    this.ws.onmessage = (event => {
+      this.event = event;
+    });
+    this.ws.onopen = (event => {
+        console.log(event)
+        console.log("Successfully connected to the websocket server...")
+    })
+  },
+  watch: {
+    event: function () {
+      //se for preciso para receber eventos
+    }
+  }
 }
 
 </script>
