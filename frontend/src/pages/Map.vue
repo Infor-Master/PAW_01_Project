@@ -31,9 +31,9 @@
               @closeclick="handleInfoWindowClose()"
             >
               <div>
-                <h2>{{ activeZone.Name }}</h2>
-                <h5>
-                  Participantes: {{ activeZone.PplCount }}/{{ activeZone.Limits }}
+                <h4 style="color:black;">{{ activeZone.Name }}</h4>
+                <h5 style="color:black;">
+                  <b>Participantes:</b> {{ activeZone.PplCount }}/{{ activeZone.Limits }}
                 </h5>
               </div>
             </gmap-info-window>
