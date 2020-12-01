@@ -17,15 +17,14 @@ func init() {
 	services.OpenDatabase()
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
-	
+
 	/*var admin model.Worker
 	admin.Username = "Admin"
 	admin.Name = "Test Admin Account"
 	admin.Password = services.HashAndSalt([]byte("admin123"))
 	admin.Admin = true
 	services.Db.Save(&admin)*/
-	
-	
+
 	defer services.Db.Close()
 }
 
@@ -52,12 +51,6 @@ func main() {
 		zone.GET("/id/:id", routes.GetZone)
 		zone.POST("/id/:id/add", routes.AddPerson)
 		zone.POST("/id/:id/remove", routes.RemovePerson)
-	}
-
-	worker := router.Group("/api/workers")
-	worker.Use(services.AuthorizationRequired())
-	{
-		//worker.GET("/:id", routes.GetWorkerZoneByID)
 	}
 
 	admin := router.Group("/api/admin")
