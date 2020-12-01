@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import settings from '../settings'
+import settings from '../../configs.json'
 import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
@@ -45,13 +45,12 @@ export default {
       this.axios({
         method: 'post',
         url: '/login',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         data: {
           username: this.username,
           password: this.password,
         }
-      }).then(response => {
-          console.log(response)
+      }).then((response) => {
           localStorage.setItem('jwt',response.data.token)
           try{
             let jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
