@@ -96,54 +96,58 @@ export default {
         });
     },
     addPerson() {
-      this.axios({
-        method: "post",
-        url: `/zones/id/${this.$route.params.id}/add`,
-        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
-        .then(() => {
-          try {
-            this.ws.send("updZone"); //manda aviso para atualizar
-          } catch (error) {
-            this.created(); //volta a criar a coneção
-            this.ws.send("updZone"); //manda aviso para atualizar
-          }
+      if (this.zone.PplCount < this.zone.Limits){
+        this.axios({
+          method: "post",
+          url: `/zones/id/${this.$route.params.id}/add`,
+          baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
         })
-        .catch((error) => {
-          if (error.response) {
-            console.error(error.response);
-            this.message =
-              error.response.status + " - " + error.response.statusText;
-          }
+          .then(() => {
+            try {
+              this.ws.send("updZone"); //manda aviso para atualizar
+            } catch (error) {
+              this.created(); //volta a criar a coneção
+              this.ws.send("updZone"); //manda aviso para atualizar
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              console.error(error.response);
+              this.message =
+                error.response.status + " - " + error.response.statusText;
+            }
         });
+      }
     },
     removePerson() {
-      this.axios({
-        method: "post",
-        url: `/zones/id/${this.$route.params.id}/remove`,
-        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
-        .then(() => {
-          try {
-            this.ws.send("updZone"); //manda aviso para atualizar
-          } catch (error) {
-            this.created(); //volta a criar a coneção
-            this.ws.send("updZone"); //manda aviso para atualizar
-          }
+      if (this.zone.PplCount >0){
+        this.axios({
+          method: "post",
+          url: `/zones/id/${this.$route.params.id}/remove`,
+          baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
         })
-        .catch((error) => {
-          if (error.response) {
-            console.error(error.response);
-            this.message =
-              error.response.status + " - " + error.response.statusText;
-          }
-        });
+          .then(() => {
+            try {
+              this.ws.send("updZone"); //manda aviso para atualizar
+            } catch (error) {
+              this.created(); //volta a criar a coneção
+              this.ws.send("updZone"); //manda aviso para atualizar
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              console.error(error.response);
+              this.message =
+                error.response.status + " - " + error.response.statusText;
+            }
+          });
+      }
     },
     handlerOnclickBack() {
       this.$router.go(-1);

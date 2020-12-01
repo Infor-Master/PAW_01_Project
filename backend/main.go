@@ -18,13 +18,14 @@ func init() {
 	services.Db.AutoMigrate(&model.Worker{})
 	services.Db.AutoMigrate(&model.Zone{})
 	
-	var admin model.Worker
+	/*var admin model.Worker
 	admin.Username = "Admin"
 	admin.Name = "Test Admin Account"
 	admin.Password = services.HashAndSalt([]byte("admin123"))
 	admin.Admin = true
-	services.Db.Save(&admin)
-
+	services.Db.Save(&admin)*/
+	
+	
 	defer services.Db.Close()
 }
 
