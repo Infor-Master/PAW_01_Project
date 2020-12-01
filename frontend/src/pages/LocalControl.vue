@@ -123,7 +123,7 @@ export default {
       }
     },
     removePerson() {
-      if (this.zone.PplCount >=0){
+      if (this.zone.PplCount >0){
         this.axios({
           method: "post",
           url: `/zones/id/${this.$route.params.id}/remove`,
