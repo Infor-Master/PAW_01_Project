@@ -1,22 +1,29 @@
 <template>
   <div class="myDiv">
-    <b-jumbotron bg-variant="dark" text-variant="light" border-variant="success">
+    <b-jumbotron
+      bg-variant="dark"
+      text-variant="light"
+      border-variant="success"
+    >
       <template slot="lead">
         <h3><b>Manage Zones</b></h3>
         <form class="addZone" @submit.prevent="handlerSubmitAdd">
           <hr />
           <h5 v-for="zone in this.zones" :key="zone.ID">
-            <b style="color:powderblue;">ID:</b> {{ zone.ID }}, 
-            <b style="color:powderblue;">Name:</b>
-             {{ zone.Name}}, <b style="color:powderblue;">Lat:</b> {{ zone.Latitude.toFixed(3) }}, 
-             <b style="color:powderblue;">Lng:</b>
+            <b style="color: powderblue">ID:</b> {{ zone.ID }},
+            <b style="color: powderblue">Name:</b>
+            {{ zone.Name }}, <b style="color: powderblue">Lat:</b>
+            {{ zone.Latitude.toFixed(3) }},
+            <b style="color: powderblue">Lng:</b>
             {{ zone.Longitude.toFixed(3) }}
           </h5>
 
           <h5>
-            <b style="color:powderblue;">Localização mapa:</b> {{ mapCoordinates.lat.toFixed(3) }} 
-            <b style="color:lightgreen;">Latitude</b>,
-            {{ mapCoordinates.lng.toFixed(3) }} <b style="color:lightgreen;">Longitude</b>
+            <b style="color: powderblue">Localização mapa:</b>
+            {{ mapCoordinates.lat.toFixed(3) }}
+            <b style="color: lightgreen">Latitude</b>,
+            {{ mapCoordinates.lng.toFixed(3) }}
+            <b style="color: lightgreen">Longitude</b>
           </h5>
           <gmap-map
             :center="{ lat: coordinates.lat, lng: coordinates.lng }"
@@ -32,17 +39,25 @@
                 @closeclick="handleInfoWindowClose()"
               >
                 <div>
-                  <h4 style="color:black;"><b>{{ activeZone.Name }}</b></h4>
-                  <h5 style="color:black;">
-                    <b>Participantes:</b> {{ activeZone.PplCount }}/{{ activeZone.Limits }}
+                  <h4 style="color: black">
+                    <b>{{ activeZone.Name }}</b>
+                  </h4>
+                  <h5 style="color: black">
+                    <b>Participantes:</b> {{ activeZone.PplCount }}/{{
+                      activeZone.Limits
+                    }}
                   </h5>
                   <form
                     class="RemoveZone"
                     @submit.prevent="handlerSubmitRemove()"
                   >
-                    <b-button type="submit" class="btn btn-dark btn-lg btn-block"
-                    variant="outline-success" style="width:auto;margin:auto;">Remove
-          </b-button>
+                    <b-button
+                      type="submit"
+                      class="btn btn-dark btn-lg btn-block"
+                      variant="outline-success"
+                      style="width: auto; margin: auto"
+                      >Remove
+                    </b-button>
                   </form>
                 </div>
               </gmap-info-window>
@@ -60,7 +75,7 @@
           <div>
             <h5>Name</h5>
             <input required v-model="name" type="text" placeholder="Name" />
-            <br><br>
+            <br /><br />
 
             <h5>Latitude</h5>
             <input
@@ -70,7 +85,7 @@
               step="0.00000000000000001"
               placeholder="Latitude"
             />
-            <br><br>
+            <br /><br />
             <h5>Longitude</h5>
             <input
               required
@@ -79,37 +94,49 @@
               step="0.00000000000000001"
               placeholder="Longitude"
             />
-            <br><br>
+            <br /><br />
             <h5>Limit</h5>
-            <input required v-model="limits" type="number" placeholder="Limit" />
-            <br>
+            <input
+              required
+              v-model="limits"
+              type="number"
+              placeholder="Limit"
+            />
+            <br />
           </div>
-          <br>
-          <b-button type="submit" class="btn btn-dark btn-lg btn-block"
-              variant="outline-primary" style="width:20%;margin:auto;">Add
+          <br />
+          <b-button
+            type="submit"
+            class="btn btn-dark btn-lg btn-block"
+            variant="outline-primary"
+            style="width: 20%; margin: auto"
+            >Add
           </b-button>
-          <br>
+          <br />
           {{ this.message }}
         </form>
       </template>
       <div class="backBtn">
-      <b-button v-on:click="handlerOnclickBack" 
-      class="btn btn-dark btn-lg btn-block"
-      variant="outline-success">Back</b-button>
-    </div>
+        <b-button
+          v-on:click="handlerOnclickBack"
+          class="btn btn-dark btn-lg btn-block"
+          variant="outline-success"
+          >Back</b-button
+        >
+      </div>
     </b-jumbotron>
   </div>
 </template>
 
 <script>
-import settings from "../settings";
+import settings from "../../configs.json";
 
 export default {
   name: "addRemoveZone",
   data() {
     return {
       ws: null,
-      event: '',
+      event: "",
       map: null,
       coordinates: {
         lat: 0,
@@ -136,7 +163,8 @@ export default {
       this.axios({
         method: "get",
         url: "/zones/all",
-        baseURL: settings.baseURL,
+        baseURL:
+          settings.backend.protocol + settings.URL + settings.backend.path,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
@@ -195,7 +223,8 @@ export default {
       this.axios({
         method: "post",
         url: "/admin/zones",
-        baseURL: settings.baseURL,
+        baseURL:
+          settings.backend.protocol + settings.URL + settings.backend.path,
         data: {
           name: this.name,
           latitude: parseFloat(this.mapCoordinates.lat),
@@ -206,14 +235,13 @@ export default {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
       })
-        .then((response) => {
-          console.log(response)
+        .then(() => {
           this.message = "Zone Registado!";
           try {
-            this.ws.send('updZone') //manda aviso para atualizar
+            this.ws.send("updZone"); //manda aviso para atualizar
           } catch (error) {
-            this.created()          //volta a criar a coneção
-            this.ws.send('updZone') //manda aviso para atualizar
+            this.created(); //volta a criar a coneção
+            this.ws.send("updZone"); //manda aviso para atualizar
           }
         })
         .catch((error) => {
@@ -225,28 +253,27 @@ export default {
         });
     },
     handlerSubmitRemove() {
-      console.log(this.activeZone);
       var zoneID = this.activeZone["ID"];
 
       this.message = "";
       this.axios({
         method: "delete",
         url: `admin/zones/` + zoneID,
-        baseURL: settings.baseURL,
+        baseURL:
+          settings.backend.protocol + settings.URL + settings.backend.path,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
       })
-        .then((response) => {
-          console.log(response)
+        .then(() => {
           this.message = "Zone Deleted!";
-          this.activeZone = {}
+          this.activeZone = {};
           this.infoWindowOpened = false;
           try {
-            this.ws.send('updZone') //manda aviso para atualizar
+            this.ws.send("updZone"); //manda aviso para atualizar
           } catch (error) {
-            this.created()          //volta a criar a coneção
-            this.ws.send('updZone') //manda aviso para atualizar
+            this.created(); //volta a criar a coneção
+            this.ws.send("updZone"); //manda aviso para atualizar
           }
         })
         .catch((error) => {
@@ -273,14 +300,15 @@ export default {
         alert(error);
       });
 
-    this.ws = new WebSocket(settings.socketURL)
-    this.ws.onmessage = (event => {
+    this.ws = new WebSocket(
+      settings.sockets.protocol + settings.URL + settings.sockets.path
+    );
+    this.ws.onmessage = (event) => {
       this.event = event;
-    });
-    this.ws.onopen = (event => {
-        console.log(event)
-        console.log("Successfully connected to the websocket server...")
-    })
+    };
+    this.ws.onopen = () => {
+      console.log("Successfully connected to the websocket server...");
+    };
   },
   computed: {
     mapCoordinates() {
@@ -298,35 +326,37 @@ export default {
   },
   watch: {
     event: function (newEvent) {
-      if(newEvent.data === 'getZone'){
-        this.getAllZones();  //buscar zonas atualizadas
-        this.event = '';  //reset ao evento
+      if (newEvent.data === "getZone") {
+        this.getAllZones(); //buscar zonas atualizadas
+        this.event = ""; //reset ao evento
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-
 <style scoped>
-  .map {
-    margin: auto;
-    width: 50%;
-    padding: 20px;
-  }
-  .backBtn {
-    margin: auto;
-    padding: 2%;
-    width: 30%;
-  }
-  .myDiv{
-    width: 60%;
-    align-content: center;
-    margin: auto;
-  }
-  hr { 
-    display: block; height: 2px;
-    border: 0; border-top: 2px solid rgb(27, 180, 52);
-    margin: 1em 0; padding: 0; 
-  }
+.map {
+  margin: auto;
+  width: 50%;
+  padding: 20px;
+}
+.backBtn {
+  margin: auto;
+  padding: 2%;
+  width: 30%;
+}
+.myDiv {
+  width: 60%;
+  align-content: center;
+  margin: auto;
+}
+hr {
+  display: block;
+  height: 2px;
+  border: 0;
+  border-top: 2px solid rgb(27, 180, 52);
+  margin: 1em 0;
+  padding: 0;
+}
 </style>

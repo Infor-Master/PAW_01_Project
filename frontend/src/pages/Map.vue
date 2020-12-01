@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import settings from "../settings";
+import settings from "../../configs.json";
 
 export default {
   data() {
@@ -100,12 +100,11 @@ export default {
         alert(error);
       });
 
-    this.ws = new WebSocket(settings.socketURL);
+    this.ws = new WebSocket(settings.sockets.protocol + settings.URL + settings.sockets.path);
     this.ws.onmessage = (event) => {
       this.event = event;
     };
-    this.ws.onopen = (event) => {
-      console.log(event);
+    this.ws.onopen = () => {
       console.log("Successfully connected to the websocket server...");
     };
   },
@@ -136,7 +135,7 @@ export default {
       this.axios({
         method: "get",
         url: "/zones/worker",
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
