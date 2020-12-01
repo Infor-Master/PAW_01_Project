@@ -55,7 +55,9 @@
             :plain="true"
             style="width: 33%; margin: auto"
             :options="this.userOptions"
-          />
+          >
+            <b-form-select-option :value="null" v-model="selected" :plain="true" style="width:33%;margin:auto;" :options="this.userOptions" disabled>Select a Worker</b-form-select-option>
+          </b-form-select>
           <br />
           <div class="btn2">
             <b-button

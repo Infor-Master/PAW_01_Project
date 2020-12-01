@@ -5,15 +5,15 @@
       <template slot="lead">
         <h3><b>Association</b></h3>
         <hr>
-        <p>
-        <h5><b style="color:lightgreen;">Worker {{this.selectedWorker}}</b></h5>
-        <h5><b style="color:powderblue;">Zones: </b>{{this.zoneOptions}}</h5>
-        <p>
         <form class="Associate" @submit.prevent="handlerSubmitAssociate()">
         <br>
-        <b-form-select v-model="selectedWorker" :plain="true" style="width:33%;margin:auto;" :options="this.userOptions" />
+        <b-form-select v-model="selectedWorker" :plain="true" style="width:33%;margin:auto;" :options="this.userOptions">
+          <b-form-select-option :value="null" v-model="selectedWorker" :plain="true" style="width:33%;margin:auto;" :options="this.userOptions" disabled>Select a Worker</b-form-select-option>
+        </b-form-select>
         <br>
-        <b-form-select v-model="selectedZone" :plain="true" style="width:33%;margin:auto;" :options="this.zoneOptions"/>
+        <b-form-select v-model="selectedZone" :plain="true" style="width:33%;margin:auto;" :options="this.zoneOptions">
+          <b-form-select-option :value="null" v-model="selectedZone" disabled>Select a Zone</b-form-select-option>
+        </b-form-select>
         <br>
         <div class="btn2">
           <b-button type="submit" class="btn btn-dark btn-lg btn-block"
