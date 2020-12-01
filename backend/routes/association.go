@@ -12,7 +12,7 @@ import (
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
-// @Success 200 {string} resourceId
+// @Success 200 default
 // @Router /api/admin/association [post]
 // @Failure 400,404 "Not Found"
 func AssociateUsersZones(c *gin.Context) {
@@ -20,15 +20,14 @@ func AssociateUsersZones(c *gin.Context) {
 }
 
 // @Summary Desassocia workers a zonas
-// @Description Desassocia workers a zonas vis IDs
+// @Description Desassocia workers a zonas via IDs
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
-// @Success 200 {array} model.Worker
-// @Router /admin/ [get]
-// @Router /admin/association [get]
-// @Failure 404 "Not found"
+// @Success 200 default
+// @Router /api/admin/association [delete]
+// @Failure 400,404 "Not found"
 func DesassociateUsersZones(c *gin.Context) {
 	controllers.DesassociateUsersZones(c)
 }

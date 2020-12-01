@@ -7,19 +7,28 @@ import (
 )
 
 // @Summary Recupera as zonas
-// @Description Exibe a lista, sem todos os campos, de todas as zonas
+// @Description Exibe a lista de todas as zonas
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Success 200 {array} model.Zone
-// @Router /zones [get]
-// @Router /admin/zones [get]
+// @Router api/zones [get]
+// @Router api/admin/zones [get]
 // @Failure 404 "Not found"
 func GetZones(c *gin.Context) {
 	controllers.GetZones(c)
 }
 
+// @Summary Recupera as zonas de um worker
+// @Description Exibe a lista de todas as zonas de um worker
+// @Accept  json
+// @Produce  json
+// @Security BearerAuth
+// @param Authorization header string true "Token"
+// @Success 200 {array} model.Zone
+// @Router api/zones/worker [get]
+// @Failure 404 "Not found"
 func GetWorkerZones(c *gin.Context) {
 	controllers.GetWorkerZones(c)
 }
@@ -31,7 +40,7 @@ func GetWorkerZones(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Param zone body model.Zone true "Add zone"
-// @Router /admin/zones [post]
+// @Router api/admin/zones [post]
 // @Success 201 {object} model.Zone
 // @Failure 400 "Bad request"
 // @Failure 404 "Not found"
@@ -47,13 +56,23 @@ func AddZone(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Param id path int true "Zone ID"
-// @Router /admin/zones/{id} [delete]
+// @Router api/admin/zones/{id} [delete]
 // @Success 200 {object} model.Zone
 // @Failure 404 "Not found"
 func DeleteZone(c *gin.Context) {
 	controllers.DeleteZone(c)
 }
 
+// @Summary Recupera uma zona
+// @Description Exibe a lista de todas as zonas
+// @Accept  json
+// @Produce  json
+// @Security BearerAuth
+// @param Authorization header string true "Token"
+// @Param id path int true "Zone ID"
+// @Success 200 {object} model.Zone
+// @Router api/zone [get]
+// @Failure 404 "Not found"
 func GetZone(c *gin.Context) {
 	controllers.GetZone(c)
 }
