@@ -1,29 +1,43 @@
 <template>
- <div>
-    <h1>Association</h1>
-    <button v-on:click="handlerOnclickBack">Back</button>
-    <p>
-    <h5>Worker: {{this.selectedWorker}}</h5>
-    <h5>Zones: {{this.zoneOptions}}</h5>
-    <p>
-    <form class="Associate" @submit.prevent="handlerSubmitAssociate()">
-    
-    <b-form-select v-model="selectedWorker" :plain="true" :options="this.userOptions" />
-    <b-form-select v-model="selectedZone" :plain="true" :options="this.zoneOptions"/>
-     
-    <button type="submit">Associate</button>
-    </form>
-
-    <form class="Desassociate" @submit.prevent="handlerRemoveAssociate()">
-    <button type="remove">Remove</button>
-    </form>
-
+ <div class="myDiv">
+   <br>
+   <b-jumbotron bg-variant="dark" text-variant="light" border-variant="success">
+      <template slot="lead">
+        <h3><b>Association</b></h3>
+        <hr>
+        <p>
+        <h5><b style="color:lightgreen;">Worker {{this.selectedWorker}}</b></h5>
+        <h5><b style="color:powderblue;">Zones: </b>{{this.zoneOptions}}</h5>
+        <p>
+        <form class="Associate" @submit.prevent="handlerSubmitAssociate()">
+        <br>
+        <b-form-select v-model="selectedWorker" :plain="true" style="width:33%;margin:auto;" :options="this.userOptions" />
+        <br>
+        <b-form-select v-model="selectedZone" :plain="true" style="width:33%;margin:auto;" :options="this.zoneOptions"/>
+        <br>
+        <div class="btn2">
+          <b-button type="submit" class="btn btn-dark btn-lg btn-block"
+          variant="outline-primary">Associate</b-button>
+        </div>
+        </form>
+        <form class="Desassociate" @submit.prevent="handlerRemoveAssociate()">
+          <div class="btn2">
+            <b-button type="remove" class="btn btn-dark btn-lg btn-block"
+          variant="outline-danger">Remove</b-button>
+          </div>
+        </form>
+      </template>
+    </b-jumbotron>
+    <div class="btn2">
+      <b-button v-on:click="handlerOnclickBack" class="btn btn-dark btn-lg btn-block"
+          variant="outline-success">Back</b-button>
+    </div>
  </div>
 </template>
 
 <script>
   
-import settings from '../settings';
+import settings from '../../configs.json';
 import VueJwtDecode from 'vue-jwt-decode'
 
   export default {
@@ -49,7 +63,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         this.axios({
         method: 'post',
         url: '/admin/associate',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         data: {
           idWorker: this.selectedWorker,
           idZone: this.selectedZone
@@ -57,8 +71,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`        }
       })
-      .then(response => {
-        console.log(response)
+      .then(() => {
         this.message = " Registado!"
         this.ws.send('updZone') //manda aviso para atualizar
         this.getAllZones();
@@ -76,7 +89,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         this.axios({
         method: 'delete',
         url: '/admin/associate',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         data: {
           idWorker: this.selectedWorker,
           idZone: this.selectedZone
@@ -84,8 +97,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`        }
       })
-      .then(response => {
-        console.log(response)
+      .then(() => {
 
         this.message = " Registado!"
         this.ws.send('updZone') //manda aviso para atualizar
@@ -104,7 +116,7 @@ import VueJwtDecode from 'vue-jwt-decode'
       this.axios({
         method: 'get',
         url: '/zones/all',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
@@ -137,7 +149,7 @@ import VueJwtDecode from 'vue-jwt-decode'
       this.axios({
         method: 'get',
         url: 'admin/users',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
@@ -145,7 +157,6 @@ import VueJwtDecode from 'vue-jwt-decode'
       .then((response) =>{
         this.aux=response.data["data"];
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
-        console.log()
         for(var j = 0; j < this.aux.length; j++){
             
           this.workers.push({
@@ -173,12 +184,11 @@ import VueJwtDecode from 'vue-jwt-decode'
     this.getWorkers()
   },
   created() {
-    this.ws = new WebSocket(settings.socketURL)
+    this.ws = new WebSocket(settings.sockets.protocol + settings.URL + settings.sockets.path)
     this.ws.onmessage = (event => {
       this.event = event;
     });
-    this.ws.onopen = (event => {
-        console.log(event)
+    this.ws.onopen = (() => {
         console.log("Successfully connected to the websocket server...")
     })
   },
@@ -188,5 +198,23 @@ import VueJwtDecode from 'vue-jwt-decode'
     }
   }
 }
-
 </script>
+
+
+<style scoped>
+  .btn2 {
+    margin: auto;
+    padding: 2%;
+    width: 30%;
+  }
+  .myDiv{
+    width: 60%;
+    align-content: center;
+    margin: auto;
+  }
+  hr { 
+    display: block; height: 2px;
+    border: 0; border-top: 2px solid rgb(27, 180, 52);
+    margin: 1em 0; padding: 0; 
+  }
+</style>
