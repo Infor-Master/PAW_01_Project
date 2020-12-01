@@ -43,7 +43,6 @@
                 >Remove Person</b-button
               >
             </div>
-            <!--<VueTable />-->
           </b-jumbotron>
         </b-col>
       </b-row>
@@ -60,14 +59,10 @@
 </template>
 
 <script>
-import VueTable from "@/components/VueTable";
-import settings from "@/settings";
+import settings from "../../configs.json";
 import VueJwtDecode from "vue-jwt-decode";
 
 export default {
-  props: {
-    VueTable,
-  },
   data() {
     return {
       ws: null,
@@ -83,11 +78,10 @@ export default {
       } catch (e) {
         console.error(e);
       }
-      console.log(this.jwtDecoded);
       this.axios({
         method: "get",
         url: `/zones/id/${this.$route.params.id}`,
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
@@ -105,13 +99,12 @@ export default {
       this.axios({
         method: "post",
         url: `/zones/id/${this.$route.params.id}/add`,
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
       })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           try {
             this.ws.send("updZone"); //manda aviso para atualizar
           } catch (error) {
@@ -131,13 +124,12 @@ export default {
       this.axios({
         method: "post",
         url: `/zones/id/${this.$route.params.id}/remove`,
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },
       })
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           try {
             this.ws.send("updZone"); //manda aviso para atualizar
           } catch (error) {
@@ -161,12 +153,11 @@ export default {
     this.loadPage();
   },
   created() {
-    this.ws = new WebSocket(settings.socketURL);
+    this.ws = new WebSocket(settings.sockets.protocol + settings.URL + settings.sockets.path);
     this.ws.onmessage = (event) => {
       this.event = event;
     };
-    this.ws.onopen = (event) => {
-      console.log(event);
+    this.ws.onopen = () => {
       console.log("Successfully connected to the websocket server...");
     };
   },

@@ -37,7 +37,7 @@
 
 <script>
   
-import settings from '../settings';
+import settings from '../../configs.json';
 import VueJwtDecode from 'vue-jwt-decode'
 
   export default {
@@ -63,7 +63,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         this.axios({
         method: 'post',
         url: '/admin/associate',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         data: {
           idWorker: this.selectedWorker,
           idZone: this.selectedZone
@@ -71,8 +71,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`        }
       })
-      .then(response => {
-        console.log(response)
+      .then(() => {
         this.message = " Registado!"
         this.ws.send('updZone') //manda aviso para atualizar
         this.getAllZones();
@@ -90,7 +89,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         this.axios({
         method: 'delete',
         url: '/admin/associate',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         data: {
           idWorker: this.selectedWorker,
           idZone: this.selectedZone
@@ -98,8 +97,7 @@ import VueJwtDecode from 'vue-jwt-decode'
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`        }
       })
-      .then(response => {
-        console.log(response)
+      .then(() => {
 
         this.message = " Registado!"
         this.ws.send('updZone') //manda aviso para atualizar
@@ -118,7 +116,7 @@ import VueJwtDecode from 'vue-jwt-decode'
       this.axios({
         method: 'get',
         url: '/zones/all',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
@@ -151,7 +149,7 @@ import VueJwtDecode from 'vue-jwt-decode'
       this.axios({
         method: 'get',
         url: 'admin/users',
-        baseURL: settings.baseURL,
+        baseURL: settings.backend.protocol + settings.URL + settings.backend.path,
         headers:{
           'Authorization': `Bearer ${localStorage.getItem('jwt')}`
         }
@@ -159,7 +157,6 @@ import VueJwtDecode from 'vue-jwt-decode'
       .then((response) =>{
         this.aux=response.data["data"];
         this.jwtDecoded = VueJwtDecode.decode(localStorage.getItem('jwt'))
-        console.log()
         for(var j = 0; j < this.aux.length; j++){
             
           this.workers.push({
@@ -187,12 +184,11 @@ import VueJwtDecode from 'vue-jwt-decode'
     this.getWorkers()
   },
   created() {
-    this.ws = new WebSocket(settings.socketURL)
+    this.ws = new WebSocket(settings.sockets.protocol + settings.URL + settings.sockets.path)
     this.ws.onmessage = (event => {
       this.event = event;
     });
-    this.ws.onopen = (event => {
-        console.log(event)
+    this.ws.onopen = (() => {
         console.log("Successfully connected to the websocket server...")
     })
   },
