@@ -27,7 +27,7 @@
             </b-list-group>
             <div class="btn">
               <b-button
-                @click="addPerson"
+                click="addPerson"
                 class="button"
                 size="lg"
                 variant="success"
