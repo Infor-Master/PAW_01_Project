@@ -1,9 +1,6 @@
 package model
 
-import "github.com/jinzhu/gorm"
-
-type Zone struct {
-	gorm.Model `swaggerignore:"true"`
+type Helper struct {
 	Name       string "gorm:unique"
 	Latitude   float32 "gorm:not null"
 	Longitude  float32 "gorm:not null"
